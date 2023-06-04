@@ -80,7 +80,7 @@
 
                 <!-- intereses -->
                 <div class="col">
-                    <h3>Intereses</h3>
+                    <h3>Interests</h3>
                     <div class="contenedor-intereses">
                         <div class="interes">
                             <i class="fa-solid fa-gamepad"></i>
@@ -119,10 +119,10 @@
                 </div>
             </div>
             <button>
-               <a href="img/CV.PDF" download> Download CV <i class="fa-solid fa-download"></i></a>
-                <span class="overlay"></span>
-                  
-            </button>
+                <a href="img/CV.PDF" download> Download CV <i class="fa-solid fa-download"></i></a>
+                 <span class="overlay"></span>
+                   
+             </button>
         </div>
     </section>
 
@@ -229,7 +229,7 @@
             <h2>Resume</h2>
             <div class="fila">
                 <div class="col izquierda">
-                    <h3>Educación</h3>
+                    <h3>Education</h3>
                     <div class="item izq">
                         <h4>Educación Secundaría Obligatoria</h4>
                         <span class="casa">Escola Thau Barcelona. BCN.</span>
@@ -321,34 +321,90 @@
     </section>
 
     <!-- SECCION PORTFOLIO -->
+    <style>
+        a {
+            color: rgb(255, 255, 255); /* Cambia el color a tu preferencia, por ejemplo: #333 para gris oscuro */
+            text-decoration: none; /* Elimina el subrayado del enlace si lo deseas */
+        }
+    
+        a:hover {
+            color: rgb(#1CB698); /* Cambia el color de resaltado al pasar el mouse sobre el enlace, por ejemplo: #c00 para rojo */
+        }
+    </style>
+    
+    <style>
+        .galeria {
+            display: flex; /* Muestra los elementos de la galería en línea */
+            justify-content: center; /* Centra horizontalmente los elementos dentro de la galería */
+            align-items: center; /* Centra verticalmente los elementos dentro de la galería */
+        }
+        
+        .proyecto {
+            flex: 1; /* Distribuye el espacio disponible de manera uniforme entre los elementos de la galería */
+            margin: 10px; /* Añade un espacio entre los elementos de la galería */
+            text-align: center; /* Centra el contenido dentro de cada elemento de la galería */
+        }
+    
+        .proyecto img {
+            width: auto; /* Establece el ancho automático para mantener la relación de aspecto original */
+            height: 200px; /* Ajusta la altura fija para todas las imágenes */
+            object-fit: cover; /* Ajusta el tamaño de la imagen para llenar el contenedor sin deformarla */
+        }
+    </style>
+    
     <section id="portfolio" class="portfolio">
         <div class="contenido-seccion">
             <h2>PROJECTS</h2>
             <div class="galeria">
                 <div class="proyecto">
-                    <img src="img/fondo.webp" alt="">
-                    <div class="overlay">
-                        <h3>ROV</h3>
-                        <p></p>
-                    </div>
+                    <a href="link_del_proyecto_1" target="_blank">
+                        <img src="img/fondo.webp" alt="">
+                        <div class="overlay">
+                            <h3>ROV</h3>
+                            <p></p>
+                        </div>
+                    </a>
                 </div>
                 <div class="proyecto">
-                    <img src="img/p2.webp" alt="">
-                    <div class="overlay">
-                        <h3>Theremin</h3>
-                        <p></p>
-                    </div>
+                    <a href="link_del_proyecto_2" target="_blank">
+                        <img src="img/p2.webp" alt="">
+                        <div class="overlay">
+                            <h3>Theremin</h3>
+                            <p></p>
+                        </div>
+                    </a>
                 </div>
                 <div class="proyecto">
-                    <img src="img/p3.webp" alt="">
-                    <div class="overlay">
-                        <h3>Foot Piano</h3>
-                        <p></p>
-                    </div>
+                    <a href="https://www.instructables.com/Foot-Piano/" target="_blank">
+                        <img src="img/p3.webp" alt="">
+                        <div class="overlay">
+                            <h3>Foot Piano</h3>
+                            <p></p>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
+    
+    
+    
+    
+    
+    <script>
+        window.onload = function() {
+            var proyectos = document.getElementsByClassName("proyecto");
+            for (var i = 0; i < proyectos.length; i++) {
+                proyectos[i].addEventListener("click", function() {
+                    var link = this.getAttribute("data-link");
+                    if (link) {
+                        window.location.href = link;
+                    }
+                });
+            }
+        };
+    </script>
+    
 
     <script src="script.js"></script>
 </body>
