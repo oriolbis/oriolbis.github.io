@@ -58,9 +58,14 @@
             min-height: 300px;
         }
         
+        #terminal-output {
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+        }
+        
         .prompt-line {
             display: flex;
-            margin-bottom: 1em;
+            margin-bottom: 5px;
         }
         
         .prompt {
@@ -71,7 +76,21 @@
         
         .command {
             color: #ffffff;
-            flex-grow: 1;
+        }
+        
+        #input-line {
+            display: flex;
+        }
+        
+        #command-input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            width: 100%;
+            outline: none;
+            caret-color: #00ff00;
         }
         
         .cursor {
@@ -96,23 +115,8 @@
             color: #ffeb3b;
         }
         
-        #terminal-output {
-            margin-bottom: 10px;
-        }
-        
-        #input-line {
-            display: flex;
-        }
-        
-        #command-input {
-            background: transparent;
-            border: none;
-            color: white;
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            width: 100%;
-            outline: none;
-            caret-color: #00ff00;
+        .error {
+            color: #ff5555;
         }
     </style>
 </head>
@@ -153,37 +157,40 @@
     </div>
 
     <script>
+        const terminalOutput = document.getElementById('terminal-output');
+        const commandInput = document.getElementById('command-input');
+        
         const commands = {
             help: `
-                <strong>Comandes disponibles:</strong><br>
-                about       Mostra informació sobre mi<br>
-                projects    Mostra els meus projectes<br>
-                contact     Mostra informació de contacte<br>
-                clear       Neteja la terminal<br>
+                <strong>Comandes disponibles:</strong>
+                about       Mostra informació sobre mi
+                projects    Mostra els meus projectes
+                contact     Mostra informació de contacte
+                clear       Neteja la terminal
                 banner      Mostra el banner d'inici
             `,
             about: `
-                <strong>Oriol Bisquert i Lopez</strong><br>
-                Estudiant d'Enginyeria en Sistemes Audiovisuals<br>
-                Especialitat: Processament digital de senyals<br><br>
+                <strong>Oriol Bisquert i Lopez</strong>
+                Estudiant d'Enginyeria en Sistemes Audiovisuals
+                Especialitat: Processament digital de senyals
                 
-                <strong>Passions:</strong><br>
-                - Programació (Python, C++)<br>
-                - Edició de vídeo i fotografia<br>
+                <strong>Passions:</strong>
+                - Programació (Python, C++)
+                - Edició de vídeo i fotografia
                 - Tecnologies multimèdia
             `,
             projects: `
-                <strong>Projectes destacats:</strong><br>
-                <span class="highlight">■ Editor de vídeo amb IA</span> (Python/OpenCV)<br>
-                <span class="highlight">■ Motor de streaming</span> (Go/FFmpeg)<br>
-                <span class="highlight">■ Sistema IoT per hackathons</span> (C++)<br>
+                <strong>Projectes destacats:</strong>
+                <span class="highlight">■ Editor de vídeo amb IA</span> (Python/OpenCV)
+                <span class="highlight">■ Motor de streaming</span> (Go/FFmpeg)
+                <span class="highlight">■ Sistema IoT per hackathons</span> (C++)
                 <span class="highlight">■ Aplicació de gestió audiovisual</span> (JavaScript)
             `,
             contact: `
-                <strong>Contacte:</strong><br>
-                ✉️ <a href="mailto:oriol@example.com">oriol@example.com</a><br>
-                🔗 <a href="https://linkedin.com/in/oriolbisquert">LinkedIn</a><br>
-                🐙 <a href="https://github.com/oriolbis">GitHub</a><br>
+                <strong>Contacte:</strong>
+                ✉️ <a href="mailto:oriol@example.com">oriol@example.com</a>
+                🔗 <a href="https://linkedin.com/in/oriolbisquert">LinkedIn</a>
+                🐙 <a href="https://github.com/oriolbis">GitHub</a>
                 📱 +34 666 555 444
             `,
             banner: `
@@ -193,11 +200,9 @@
  |  _/| __ || _| | .` ||   /| _| |   /
  |_|  |_||_||___||_|\_||_|_\|___||_|_\
                 </pre>
+                <p>Benvingut al meu portafoli terminal.</p>
             `
         };
-
-        const terminalOutput = document.getElementById('terminal-output');
-        const commandInput = document.getElementById('command-input');
 
         function addCommandLine(command) {
             const line = document.createElement('div');
@@ -209,25 +214,30 @@
 
         function addOutput(content) {
             const output = document.createElement('div');
-            output.innerHTML = content;
+            output.innerHTML = content.replace(/\n/g, '<br>');
             terminalOutput.appendChild(output);
             terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        }
+
+        function processCommand(command) {
+            if (command === '') return;
+            
+            addCommandLine(command);
+            
+            if (command === 'clear') {
+                terminalOutput.innerHTML = '';
+            } else if (commands[command]) {
+                addOutput(commands[command]);
+            } else {
+                addOutput(`<span class="error">Comanda no reconeguda: ${command}. Escriu 'help' per veure opcions.</span>`);
+            }
         }
 
         commandInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 const command = commandInput.value.trim().toLowerCase();
                 commandInput.value = '';
-                
-                addCommandLine(command);
-                
-                if (command === 'clear') {
-                    terminalOutput.innerHTML = '';
-                } else if (commands[command]) {
-                    addOutput(commands[command]);
-                } else if (command) {
-                    addOutput(`<span style="color:#ff5555">Comanda no reconeguda: ${command}. Escriu 'help' per veure opcions.</span>`);
-                }
+                processCommand(command);
             }
         });
 
@@ -235,6 +245,24 @@
         document.addEventListener('click', function() {
             commandInput.focus();
         });
+
+        // Efecte d'escriptura inicial
+        setTimeout(() => {
+            const initialText = "Benvingut al meu portafoli terminal. Escriu 'help' per veure les comandes disponibles.";
+            const welcomeMsg = terminalOutput.querySelector('p');
+            if (welcomeMsg) {
+                welcomeMsg.textContent = '';
+                let i = 0;
+                const typing = () => {
+                    if (i < initialText.length) {
+                        welcomeMsg.textContent += initialText.charAt(i);
+                        i++;
+                        setTimeout(typing, 50);
+                    }
+                };
+                typing();
+            }
+        }, 500);
     </script>
 </body>
 </html>
