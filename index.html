@@ -49,6 +49,11 @@
             align-items: center;
             border-bottom: 1px solid #222;
             position: relative;
+            transition: background-color 0.3s;
+        }
+        
+        .terminal-header.active {
+            background-color: #444 !important;
         }
         
         .terminal-buttons {
@@ -92,6 +97,11 @@
             color: var(--primary-color);
         }
         
+        .prompt:after {
+            content: " $";
+            color: var(--primary-color);
+        }
+        
         .command {
             color: var(--text-color);
         }
@@ -100,6 +110,12 @@
             margin: clamp(10px, 2vw, 15px) 0;
             white-space: pre-wrap;
             word-break: break-word;
+        }
+        
+        .continuation:before {
+            content: "> ";
+            color: var(--primary-color);
+            margin-left: 2ch;
         }
         
         a {
@@ -206,16 +222,16 @@
         
         <div class="terminal-body">
             <div class="output">
-                <span class="prompt">oriolbisquert@terminal:~$</span> <span class="command">cat sobremi.txt</span>
+                <span class="prompt">oriolbisquert@terminal</span> <span class="command">cat sobremi.txt</span>
             </div>
             
             <div class="section" id="about">
                 <div id="description1">Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals.</div>
-                <div id="description2">Apassionat per la informàtica i la creació audiovisual.</div>
+                <div class="continuation" id="description2">Apassionat per la informàtica i la creació audiovisual.</div>
             </div>
 
             <div class="output">
-                <span class="prompt">oriolbisquert@terminal:~$</span> <span class="command">ls -1 projectes</span>
+                <span class="prompt">oriolbisquert@terminal</span> <span class="command">ls -1 projectes</span>
             </div>
             
             <div class="section" id="projects">
@@ -227,7 +243,7 @@
 
             <!-- SECCIÓN DE CONTACTOS ORIGINAL -->
             <div class="output">
-                <span class="prompt">oriolbisquert@terminal:~$</span> <span class="command">contacte.sh</span>
+                <span class="prompt">oriolbisquert@terminal</span> <span class="command">contacte.sh</span>
             </div>
             
             <div class="contact-teams">
@@ -247,7 +263,7 @@
             </div>
 
             <div class="output">
-                <span class="prompt">oriolbisquert@terminal:~$</span> <span class="command" id="cursor-line">_<span class="cursor">|</span></span>
+                <span class="prompt">oriolbisquert@terminal</span> <span class="command" id="cursor-line">_<span class="cursor">|</span></span>
             </div>
         </div>
     </div>
@@ -266,7 +282,7 @@
                 hackathons: "■ Hackatons",
                 audiovisual: "■ Projectes Audiovisuals",
                 programming: "■ Programació",
-                prompt: "oriolbisquert@terminal:~$"
+                prompt: "oriolbisquert@terminal"
             },
             en: {
                 description1: "Oriol Bisquert i Lopez is an engineering student specializing in audiovisual systems.",
@@ -279,7 +295,7 @@
                 hackathons: "■ Hackathons",
                 audiovisual: "■ Audiovisual Projects",
                 programming: "■ Programming",
-                prompt: "oriolbisquert@terminal:~$"
+                prompt: "oriolbisquert@terminal"
             }
         };
 
@@ -305,28 +321,50 @@
             document.querySelector('.language-switch').textContent = currentLang === "ca" ? "ENG/CAT" : "CAT/ENG";
         }
 
-        // Efecto de escritura inicial
+        // Efecto de escritura mejorado
         function typeWriter() {
             const elements = document.querySelectorAll('.command');
+            let delay = 500;
+            
             elements.forEach((el, index) => {
                 const text = el.textContent.replace('_', '').replace('|', '');
                 el.textContent = '';
                 let i = 0;
-                function typing() {
-                    if (i < text.length) {
-                        el.textContent += text.charAt(i);
-                        i++;
-                        setTimeout(typing, Math.random() * 100 + 50);
-                    } else if (index === elements.length - 1) {
-                        el.innerHTML += '<span class="cursor">|</span>';
+                
+                setTimeout(() => {
+                    function typing() {
+                        if (i < text.length) {
+                            el.textContent += text.charAt(i);
+                            i++;
+                            const speed = Math.random() * (i > text.length/2 ? 120 : 80) + 30;
+                            setTimeout(typing, speed);
+                        } else if (index === elements.length - 1) {
+                            el.innerHTML += '<span class="cursor">|</span>';
+                        }
                     }
-                }
-                setTimeout(typing, index * 500);
+                    typing();
+                }, delay);
+                
+                delay += text.length * 50 + 500;
             });
         }
 
+        // Efecto de terminal activa
+        document.addEventListener('click', function() {
+            const header = document.querySelector('.terminal-header');
+            header.classList.add('active');
+            setTimeout(() => {
+                header.classList.remove('active');
+            }, 200);
+        });
+
         window.onload = function() {
             setTimeout(typeWriter, 500);
+            
+            // Enfocar la terminal al cargar
+            document.querySelector('.terminal-container').scrollIntoView({
+                behavior: 'smooth'
+            });
         };
     </script>
 </body>
