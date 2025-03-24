@@ -6,224 +6,306 @@
     <title>Oriol Bisquert i Lopez</title>
     <style>
         body {
-            font-family: "Times New Roman", Times, serif;
-            background-color: #ffffff;
-            color: #000000;
-            text-align: left;
+            font-family: "Courier New", monospace;
+            background-color: #121212;
+            color: #e0e0e0;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .container {
-            max-width: 600px;
-            width: 100%;
-            padding: 40px;
-        }
-        h1 {
-            font-size: 20px;
-            font-weight: normal;
-            text-align: left;
-            margin-bottom: 10px;
-            font-family: "Times New Roman", Times, serif;
-        }
-        .content {
-            font-size: 16px;
+            min-height: 100vh;
             line-height: 1.6;
-            text-align: left;
-            font-family: "Times New Roman", Times, serif;
         }
-        .contact-teams {
+        
+        .terminal-container {
+            width: 100%;
+            max-width: 800px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+        }
+        
+        .terminal-header {
+            background-color: #333;
+            padding: 8px 15px;
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
+        }
+        
+        .terminal-buttons {
+            display: flex;
+            gap: 8px;
+            margin-right: 15px;
+        }
+        
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .button-red { background-color: #ff5f56; }
+        .button-yellow { background-color: #ffbd2e; }
+        .button-green { background-color: #27c93f; }
+        
+        .terminal-title {
+            flex-grow: 1;
+            text-align: center;
+            color: #aaa;
             font-size: 14px;
-            margin-top: 30px;
-            text-align: left;
-            font-family: "Times New Roman", Times, serif;
         }
-        .contact a, .teams span {
-            color: inherit;
+        
+        .terminal-body {
+            background-color: #1e1e1e;
+            padding: 20px;
+            height: auto;
+            overflow: auto;
+        }
+        
+        .prompt {
+            color: #4CAF50;
+        }
+        
+        .command {
+            color: #e0e0e0;
+        }
+        
+        .output {
+            margin: 15px 0;
+            white-space: pre-wrap;
+        }
+        
+        a {
+            color: #64b5f6;
             text-decoration: none;
-            font-family: "Times New Roman", Times, serif;
         }
-        .contact a:hover, .teams span:hover {
+        
+        a:hover {
             text-decoration: underline;
         }
-        .separator {
-            width: 100%;
-            border-bottom: 1px solid #dddddd;
-            margin: 40px 0;
-        }
-        .footer {
-            font-size: 12px;
-            color: #999999;
-            margin-top: 50px;
-            text-align: left;
-            font-family: "Times New Roman", Times, serif;
-        }
-        .dark-mode {
-            background-color: #121212;
-            color: #ffffff;
+        
+        .cursor {
+            animation: blink 1s infinite;
         }
         
-        /* Estilo del switch de modo oscuro */
-        .mode-switch {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            display: flex;
-            align-items: center;
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
         
-        /* Estilo del switch de idioma */
-        .language-switch {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            display: flex;
-            align-items: center;
+        .section {
+            margin-bottom: 25px;
         }
         
-        /* Estilo común para ambos switches */
+        .highlight {
+            color: #ffeb3b;
+        }
+        
         .switch-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             display: flex;
-            align-items: center;
-            background: #ddd;
-            border-radius: 20px;
-            padding: 2px;
-            cursor: pointer;
-            transition: background 0.3s;
+            gap: 10px;
         }
         
-        .switch-container:hover {
-            background: #bbb;
-        }
-        
-        .switch-option {
-            padding: 6px 10px;
-            border-radius: 16px;
-            transition: all 0.3s;
-        }
-        
-        .switch-option.active {
-            background: #fff;
-            color: #000;
-        }
-        
-        .dark-mode .switch-option.active {
+        .switch {
             background: #333;
-            color: #fff;
+            color: #4CAF50;
+            border: 1px solid #4CAF50;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+            border-radius: 3px;
         }
         
-        .university { color: red; }
-        .hackathons { color: blue; }
-        .audiovisual { color: red; }
-        .programming { color: red; }
+        .switch:hover {
+            background: #444;
+        }
     </style>
 </head>
 <body>
-    <!-- Switch de idioma -->
-    <div class="language-switch">
-        <div class="switch-container" onclick="toggleLanguage()">
-            <div class="switch-option active" id="lang-ca">CAT</div>
-            <div class="switch-option" id="lang-en">ENG</div>
-        </div>
+    <div class="switch-container">
+        <div class="switch" onclick="toggleLanguage()">CAT/ENG</div>
+        <div class="switch" onclick="toggleDarkMode()">MODE</div>
     </div>
-    
-    <!-- Switch de modo oscuro -->
-    <div class="mode-switch">
-        <div class="switch-container" onclick="toggleDarkMode()">
-            <div class="switch-option" id="light-mode">☀️</div>
-            <div class="switch-option active" id="dark-mode">🌙</div>
+
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="terminal-buttons">
+                <div class="terminal-button button-red"></div>
+                <div class="terminal-button button-yellow"></div>
+                <div class="terminal-button button-green"></div>
+            </div>
+            <div class="terminal-title">terminal — bash — 80×24</div>
         </div>
-    </div>
-    
-    <div class="container">
-        <h1 id="name">Oriol Bisquert i Lopez</h1>
-        <p class="content" id="description1">Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals. Apassionat per la informàtica i la creació audiovisual, ha participat en hackatons i projectes tècnics. Forma part d'entitats culturals com un club excursionista, un grup de diables de foc i els Castellers de Sant Cugat.</p>
-        <p class="content" id="description2">Té coneixements en HTML, CSS, Python i més. Està obert a col·laboracions en projectes tecnològics i creatius.</p>
         
-        <div class="separator"></div>
-        
-        <div class="contact-teams">
-            <div class="contact">
-                <strong id="contact-title">■ [CONTACTE] [1]</strong><br>
-                <a href="mailto:oriol@example.com" target="_blank" id="email">Correu ↗</a><br>
-                <a href="https://linkedin.com/in/oriolbisquert" target="_blank" id="linkedin">LinkedIn ↗</a>
+        <div class="terminal-body">
+            <div class="output">
+                <span class="prompt">usuari@terminal:~$</span> <span class="command">cat sobre_mi.txt</span>
             </div>
             
-            <div class="teams">
-                <strong id="teams-title">■ [EQUIPS] [2]</strong><br>
-                <span class="university" id="university">■ Universitat</span> 2024-<br>
-                <span class="hackathons" id="hackathons">■ Hackatons</span> 2023-2024<br>
-                <span class="audiovisual" id="audiovisual">■ Projectes Audiovisuals</span> 2023<br>
-                <span class="programming" id="programming">■ Programació</span> 2022<br>
+            <div class="section" id="about">
+                <div id="description1">Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals.</div>
+                <div id="description2">Apassionat per la informàtica i la creació audiovisual.</div>
+            </div>
+
+            <div class="output">
+                <span class="prompt">usuari@terminal:~$</span> <span class="command">ls -l projectes/</span>
+            </div>
+            
+            <div class="section" id="projects">
+                <div><span class="highlight">■ Universitat</span> 2024-</div>
+                <div><span class="highlight">■ Hackatons</span> 2023-2024</div>
+                <div><span class="highlight">■ Projectes Audiovisuals</span> 2023</div>
+                <div><span class="highlight">■ Programació</span> 2022</div>
+            </div>
+
+            <div class="output">
+                <span class="prompt">usuari@terminal:~$</span> <span class="command">contacte.sh</span>
+            </div>
+            
+            <div class="section" id="contact">
+                <div><a href="mailto:oriol@example.com" id="email">> Enviar correu</a></div>
+                <div><a href="https://linkedin.com/in/oriolbisquert" target="_blank" id="linkedin">> LinkedIn</a></div>
+            </div>
+
+            <div class="output">
+                <span class="prompt">usuari@terminal:~$</span> <span class="command" id="cursor-line">_<span class="cursor">|</span></span>
             </div>
         </div>
-        
-        <p class="footer" id="footer">Nova cartera pròximament. [3]</p>
     </div>
+
     <script>
         // Datos de traducción
         const translations = {
             ca: {
-                name: "Oriol Bisquert i Lopez",
-                description1: "Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals. Apassionat per la informàtica i la creació audiovisual, ha participat en hackatons i projectes tècnics. Forma part d'entitats culturals com un club excursionista, un grup de diables de foc i els Castellers de Sant Cugat.",
-                description2: "Té coneixements en HTML, CSS, Python i més. Està obert a col·laboracions en projectes tecnològics i creatius.",
-                "contact-title": "■ [CONTACTE] [1]",
-                email: "Correu ↗",
-                linkedin: "LinkedIn ↗",
-                "teams-title": "■ [EQUIPS] [2]",
-                university: "■ Universitat",
-                hackathons: "■ Hackatons",
-                audiovisual: "■ Projectes Audiovisuals",
-                programming: "■ Programació",
-                footer: "Nova cartera pròximament. [3]"
+                description1: "Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals.",
+                description2: "Apassionat per la informàtica i la creació audiovisual.",
+                email: "> Enviar correu",
+                linkedin: "> LinkedIn",
+                projects: [
+                    "■ Universitat 2024-",
+                    "■ Hackatons 2023-2024",
+                    "■ Projectes Audiovisuals 2023",
+                    "■ Programació 2022"
+                ],
+                prompt: "usuari@terminal:~$"
             },
             en: {
-                name: "Oriol Bisquert i Lopez",
-                description1: "Oriol Bisquert i Lopez is an engineering student specializing in audiovisual systems. Passionate about computing and audiovisual creation, he has participated in hackathons and technical projects. He is part of cultural entities such as a hiking club, a fire devils group and the Castellers de Sant Cugat.",
-                description2: "He has knowledge in HTML, CSS, Python and more. He is open to collaborations in technological and creative projects.",
-                "contact-title": "■ [CONTACT] [1]",
-                email: "Email ↗",
-                linkedin: "LinkedIn ↗",
-                "teams-title": "■ [TEAMS] [2]",
-                university: "■ University",
-                hackathons: "■ Hackathons",
-                audiovisual: "■ Audiovisual Projects",
-                programming: "■ Programming",
-                footer: "New portfolio coming soon. [3]"
+                description1: "Oriol Bisquert i Lopez is an engineering student specializing in audiovisual systems.",
+                description2: "Passionate about computing and audiovisual creation.",
+                email: "> Send email",
+                linkedin: "> LinkedIn",
+                projects: [
+                    "■ University 2024-",
+                    "■ Hackathons 2023-2024",
+                    "■ Audiovisual Projects 2023",
+                    "■ Programming 2022"
+                ],
+                prompt: "user@terminal:~$"
             }
         };
 
         function toggleDarkMode() {
-            document.body.classList.toggle("dark-mode");
+            const body = document.body;
+            const terminalBody = document.querySelector('.terminal-body');
+            const terminalHeader = document.querySelector('.terminal-header');
             
-            // Cambiar estado activo del switch
-            document.getElementById('light-mode').classList.toggle('active');
-            document.getElementById('dark-mode').classList.toggle('active');
+            if (body.style.backgroundColor === "rgb(30, 30, 30)") {
+                // Cambiar a modo claro
+                body.style.backgroundColor = "#f5f5f5";
+                terminalBody.style.backgroundColor = "#ffffff";
+                terminalBody.style.color = "#333333";
+                terminalHeader.style.backgroundColor = "#e0e0e0";
+                terminalHeader.style.borderBottomColor = "#ccc";
+                document.querySelector('.terminal-title').style.color = "#666";
+                
+                document.querySelectorAll('.prompt').forEach(el => el.style.color = "#2e7d32");
+                document.querySelectorAll('.command').forEach(el => el.style.color = "#333333");
+                document.querySelectorAll('a').forEach(el => el.style.color = "#1565c0");
+                document.querySelectorAll('.highlight').forEach(el => el.style.color = "#d84315");
+                document.querySelectorAll('.switch').forEach(el => {
+                    el.style.background = "#e0e0e0";
+                    el.style.color = "#2e7d32";
+                    el.style.borderColor = "#2e7d32";
+                });
+            } else {
+                // Cambiar a modo oscuro
+                body.style.backgroundColor = "#121212";
+                terminalBody.style.backgroundColor = "#1e1e1e";
+                terminalBody.style.color = "#e0e0e0";
+                terminalHeader.style.backgroundColor = "#333";
+                terminalHeader.style.borderBottomColor = "#222";
+                document.querySelector('.terminal-title').style.color = "#aaa";
+                
+                document.querySelectorAll('.prompt').forEach(el => el.style.color = "#4CAF50");
+                document.querySelectorAll('.command').forEach(el => el.style.color = "#e0e0e0");
+                document.querySelectorAll('a').forEach(el => el.style.color = "#64b5f6");
+                document.querySelectorAll('.highlight').forEach(el => el.style.color = "#ffeb3b");
+                document.querySelectorAll('.switch').forEach(el => {
+                    el.style.background = "#333";
+                    el.style.color = "#4CAF50";
+                    el.style.borderColor = "#4CAF50";
+                });
+            }
         }
-        
+
         function toggleLanguage() {
             const currentLang = document.documentElement.lang;
             const newLang = currentLang === "ca" ? "en" : "ca";
             document.documentElement.lang = newLang;
             
-            // Actualizar todos los textos
-            Object.keys(translations[newLang]).forEach(key => {
-                const element = document.getElementById(key);
-                if (element) {
-                    element.textContent = translations[newLang][key];
+            // Actualizar textos
+            document.getElementById('description1').textContent = translations[newLang].description1;
+            document.getElementById('description2').textContent = translations[newLang].description2;
+            document.getElementById('email').textContent = translations[newLang].email;
+            document.getElementById('linkedin').textContent = translations[newLang].linkedin;
+            
+            // Actualizar proyectos
+            const projectElements = document.querySelectorAll('#projects div');
+            translations[newLang].projects.forEach((project, index) => {
+                if (projectElements[index]) {
+                    projectElements[index].innerHTML = project.replace('■', '<span class="highlight">■</span>');
                 }
             });
             
-            // Cambiar estado activo del switch de idioma
-            document.getElementById('lang-ca').classList.toggle('active');
-            document.getElementById('lang-en').classList.toggle('active');
+            // Actualizar prompts
+            document.querySelectorAll('.prompt').forEach(el => {
+                el.textContent = translations[newLang].prompt;
+            });
+            
+            // Cambiar texto del botón
+            document.querySelector('.switch:first-child').textContent = currentLang === "ca" ? "ENG/CAT" : "CAT/ENG";
         }
+
+        // Efecto de escritura inicial
+        function typeWriter() {
+            const elements = document.querySelectorAll('.command');
+            elements.forEach((el, index) => {
+                const text = el.textContent.replace('_', '').replace('|', '');
+                el.textContent = '';
+                let i = 0;
+                function typing() {
+                    if (i < text.length) {
+                        el.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(typing, Math.random() * 100 + 50);
+                    } else if (index === elements.length - 1) {
+                        el.innerHTML += '<span class="cursor">|</span>';
+                    }
+                }
+                setTimeout(typing, index * 500);
+            });
+        }
+
+        window.onload = function() {
+            setTimeout(typeWriter, 500);
+        };
     </script>
 </body>
 </html>
