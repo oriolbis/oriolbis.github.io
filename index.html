@@ -6,33 +6,35 @@
     <title>Oriol Bisquert i Lopez</title>
     <style>
         body {
-            font-family: "Times New Roman", serif;
+            font-family: "Times New Roman", Times, serif;
             background-color: #ffffff;
             color: #000000;
             text-align: left;
             margin: 0;
-            padding: 40px;
-            display: block;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             transition: background-color 0.3s, color 0.3s;
         }
         .container {
             max-width: 600px;
-            margin: auto;
+            width: 100%;
+            padding: 40px;
         }
         h1 {
             font-size: 20px;
             font-weight: normal;
             text-align: left;
             margin-bottom: 10px;
-        }
-        .subtitle {
-            font-size: 18px;
-            color: #666666;
+            font-family: "Times New Roman", Times, serif;
         }
         .content {
             font-size: 16px;
             line-height: 1.6;
             text-align: left;
+            font-family: "Times New Roman", Times, serif;
         }
         .contact-teams {
             display: flex;
@@ -40,10 +42,12 @@
             font-size: 14px;
             margin-top: 30px;
             text-align: left;
+            font-family: "Times New Roman", Times, serif;
         }
         .contact a, .teams span {
             color: inherit;
             text-decoration: none;
+            font-family: "Times New Roman", Times, serif;
         }
         .contact a:hover, .teams span:hover {
             text-decoration: underline;
@@ -58,59 +62,168 @@
             color: #999999;
             margin-top: 50px;
             text-align: left;
+            font-family: "Times New Roman", Times, serif;
         }
         .dark-mode {
             background-color: #121212;
             color: #ffffff;
         }
-        .switch {
+        
+        /* Estilo del switch de modo oscuro */
+        .mode-switch {
             position: absolute;
             top: 10px;
             right: 10px;
-            cursor: pointer;
-            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Estilo del switch de idioma */
+        .language-switch {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Estilo común para ambos switches */
+        .switch-container {
+            display: flex;
+            align-items: center;
             background: #ddd;
             border-radius: 20px;
-            font-size: 14px;
+            padding: 2px;
+            cursor: pointer;
             transition: background 0.3s;
         }
-        .switch:hover {
+        
+        .switch-container:hover {
             background: #bbb;
         }
+        
+        .switch-option {
+            padding: 6px 10px;
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+        
+        .switch-option.active {
+            background: #fff;
+            color: #000;
+        }
+        
+        .dark-mode .switch-option.active {
+            background: #333;
+            color: #fff;
+        }
+        
+        .university { color: red; }
+        .hackathons { color: blue; }
+        .audiovisual { color: red; }
+        .programming { color: red; }
     </style>
 </head>
 <body>
-    <div class="switch" onclick="toggleDarkMode()">🌙</div>
+    <!-- Switch de idioma -->
+    <div class="language-switch">
+        <div class="switch-container" onclick="toggleLanguage()">
+            <div class="switch-option active" id="lang-ca">CAT</div>
+            <div class="switch-option" id="lang-en">ENG</div>
+        </div>
+    </div>
+    
+    <!-- Switch de modo oscuro -->
+    <div class="mode-switch">
+        <div class="switch-container" onclick="toggleDarkMode()">
+            <div class="switch-option" id="light-mode">☀️</div>
+            <div class="switch-option active" id="dark-mode">🌙</div>
+        </div>
+    </div>
+    
     <div class="container">
-        <h1>Oriol Bisquert i Lopez</h1>
-        <p class="content">Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals. Apassionat per la informàtica i la creació audiovisual, ha participat en hackatons i projectes tècnics. Forma part d'entitats culturals com un club excursionista, un grup de diables de foc i els Castellers de Sant Cugat.</p>
-        <p class="content">Té coneixements en HTML, CSS, Python i més. Està obert a col·laboracions en projectes tecnològics i creatius.</p>
+        <h1 id="name">Oriol Bisquert i Lopez</h1>
+        <p class="content" id="description1">Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals. Apassionat per la informàtica i la creació audiovisual, ha participat en hackatons i projectes tècnics. Forma part d'entitats culturals com un club excursionista, un grup de diables de foc i els Castellers de Sant Cugat.</p>
+        <p class="content" id="description2">Té coneixements en HTML, CSS, Python i més. Està obert a col·laboracions en projectes tecnològics i creatius.</p>
         
         <div class="separator"></div>
         
         <div class="contact-teams">
             <div class="contact">
-                <strong>■ [CONTACTE] [1]</strong><br>
-                <a href="#" target="_blank">³ Correu ↗</a><br>
-                <a href="#" target="_blank">⁵ LinkedIn ↗</a>
+                <strong id="contact-title">■ [CONTACTE] [1]</strong><br>
+                <a href="mailto:oriol@example.com" target="_blank" id="email">Correu ↗</a><br>
+                <a href="https://linkedin.com/in/oriolbisquert" target="_blank" id="linkedin">LinkedIn ↗</a>
             </div>
             
             <div class="teams">
-                <strong>■ [EQUIPS] [2]</strong><br>
-                <span style="color: red;">■ Universitat</span> 2024-<br>
-                <span style="color: blue;">■ Hackatons</span> 2023-2024<br>
-                <span style="color: red;">■ Projectes Audiovisuals</span> 2023<br>
-                <span style="color: red;">■ Programació</span> 2022<br>
+                <strong id="teams-title">■ [EQUIPS] [2]</strong><br>
+                <span class="university" id="university">■ Universitat</span> 2024-<br>
+                <span class="hackathons" id="hackathons">■ Hackatons</span> 2023-2024<br>
+                <span class="audiovisual" id="audiovisual">■ Projectes Audiovisuals</span> 2023<br>
+                <span class="programming" id="programming">■ Programació</span> 2022<br>
             </div>
         </div>
         
-        <p class="footer">Nova cartera pròximament. [3]</p>
+        <p class="footer" id="footer">Nova cartera pròximament. [3]</p>
     </div>
     <script>
+        // Datos de traducción
+        const translations = {
+            ca: {
+                name: "Oriol Bisquert i Lopez",
+                description1: "Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals. Apassionat per la informàtica i la creació audiovisual, ha participat en hackatons i projectes tècnics. Forma part d'entitats culturals com un club excursionista, un grup de diables de foc i els Castellers de Sant Cugat.",
+                description2: "Té coneixements en HTML, CSS, Python i més. Està obert a col·laboracions en projectes tecnològics i creatius.",
+                "contact-title": "■ [CONTACTE] [1]",
+                email: "Correu ↗",
+                linkedin: "LinkedIn ↗",
+                "teams-title": "■ [EQUIPS] [2]",
+                university: "■ Universitat",
+                hackathons: "■ Hackatons",
+                audiovisual: "■ Projectes Audiovisuals",
+                programming: "■ Programació",
+                footer: "Nova cartera pròximament. [3]"
+            },
+            en: {
+                name: "Oriol Bisquert i Lopez",
+                description1: "Oriol Bisquert i Lopez is an engineering student specializing in audiovisual systems. Passionate about computing and audiovisual creation, he has participated in hackathons and technical projects. He is part of cultural entities such as a hiking club, a fire devils group and the Castellers de Sant Cugat.",
+                description2: "He has knowledge in HTML, CSS, Python and more. He is open to collaborations in technological and creative projects.",
+                "contact-title": "■ [CONTACT] [1]",
+                email: "Email ↗",
+                linkedin: "LinkedIn ↗",
+                "teams-title": "■ [TEAMS] [2]",
+                university: "■ University",
+                hackathons: "■ Hackathons",
+                audiovisual: "■ Audiovisual Projects",
+                programming: "■ Programming",
+                footer: "New portfolio coming soon. [3]"
+            }
+        };
+
         function toggleDarkMode() {
             document.body.classList.toggle("dark-mode");
+            
+            // Cambiar estado activo del switch
+            document.getElementById('light-mode').classList.toggle('active');
+            document.getElementById('dark-mode').classList.toggle('active');
+        }
+        
+        function toggleLanguage() {
+            const currentLang = document.documentElement.lang;
+            const newLang = currentLang === "ca" ? "en" : "ca";
+            document.documentElement.lang = newLang;
+            
+            // Actualizar todos los textos
+            Object.keys(translations[newLang]).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = translations[newLang][key];
+                }
+            });
+            
+            // Cambiar estado activo del switch de idioma
+            document.getElementById('lang-ca').classList.toggle('active');
+            document.getElementById('lang-en').classList.toggle('active');
         }
     </script>
 </body>
 </html>
-
