@@ -76,19 +76,25 @@
             white-space: nowrap;
         }
         
-        /* Colores para diferentes tipos de comandos */
-        .command {
-            color: #ffffff; /* Color base para comandos no reconocidos */
-        }
+        /* Colors pels comandos a la línia d'entrada */
+        .command { color: #ffffff; }
+        .cmd-help { color: #4CAF50; }
+        .cmd-about { color: #2196F3; }
+        .cmd-projects { color: #FF9800; }
+        .cmd-contact { color: #9C27B0; }
+        .cmd-clear { color: #f44336; }
+        .cmd-banner { color: #00BCD4; }
+        .cmd-skills { color: #8BC34A; }
+        .cmd-education { color: #FFEB3B; }
         
-        .cmd-help { color: #4CAF50; }          /* Verde para help */
-        .cmd-about { color: #2196F3; }         /* Azul para about */
-        .cmd-projects { color: #FF9800; }       /* Naranja para projects */
-        .cmd-contact { color: #9C27B0; }       /* Púrpura para contact */
-        .cmd-clear { color: #f44336; }         /* Rojo para clear */
-        .cmd-banner { color: #00BCD4; }        /* Cyan para banner */
-        .cmd-skills { color: #8BC34A; }        /* Verde claro para skills */
-        .cmd-education { color: #FFEB3B; }     /* Amarillo para education */
+        /* Colors pels resultats dels comandos */
+        .output-help { color: #4CAF50; }
+        .output-about { color: #2196F3; }
+        .output-projects { color: #FF9800; }
+        .output-contact { color: #9C27B0; }
+        .output-banner { color: #00BCD4; }
+        .output-skills { color: #8BC34A; }
+        .output-education { color: #FFEB3B; }
         
         #input-line {
             display: flex;
@@ -166,7 +172,7 @@
                     <span class="prompt">oriolbisquert@portfolio:~$</span>
                     <span class="command cmd-banner">banner</span>
                 </div>
-                <div>
+                <div class="output-banner">
                     <pre>
   ___  _  _  ___  _  _  ___  ___  ___ 
  | _ \| || || __|| \| || _ \| __|| _ \
@@ -202,7 +208,8 @@
                         <span class="cmd-skills">skills</span>      Mostra les meves habilitats tècniques<br>
                         <span class="cmd-education">education</span>  Mostra la meva formació acadèmica
                     `,
-                    class: 'cmd-help'
+                    class: 'cmd-help',
+                    outputClass: 'output-help'
                 },
                 about: {
                     content: `
@@ -216,7 +223,8 @@
                         - Tecnologies multimèdia<br>
                         - Intel·ligència Artificial aplicada a l'àudio i vídeo
                     `,
-                    class: 'cmd-about'
+                    class: 'cmd-about',
+                    outputClass: 'output-about'
                 },
                 projects: {
                     content: `
@@ -227,7 +235,8 @@
                         <span class="highlight">■ Aplicació de gestió audiovisual</span> (JavaScript/React)<br>
                         <span class="highlight">■ Plugin de processament d'àudio</span> (C++/JUCE)
                     `,
-                    class: 'cmd-projects'
+                    class: 'cmd-projects',
+                    outputClass: 'output-projects'
                 },
                 contact: {
                     content: `
@@ -237,7 +246,8 @@
                         🐙 <a href="https://github.com/oriolbis" target="_blank">GitHub</a><br>
                         📱 +34 666 555 444
                     `,
-                    class: 'cmd-contact'
+                    class: 'cmd-contact',
+                    outputClass: 'output-contact'
                 },
                 skills: {
                     content: `
@@ -248,7 +258,8 @@
                         <strong>Web:</strong> React, Node.js, Web Audio API<br>
                         <strong>Eines:</strong> Git, Docker, AWS, Adobe Premiere
                     `,
-                    class: 'cmd-skills'
+                    class: 'cmd-skills',
+                    outputClass: 'output-skills'
                 },
                 education: {
                     content: `
@@ -261,7 +272,8 @@
                         Institut Jaume Balmes, Barcelona<br>
                         2017 - 2019
                     `,
-                    class: 'cmd-education'
+                    class: 'cmd-education',
+                    outputClass: 'output-education'
                 },
                 banner: {
                     content: `
@@ -273,11 +285,13 @@
                         </pre>
                         <p>Benvingut al meu portafoli terminal. Escriu 'help' per veure les comandes disponibles.</p>
                     `,
-                    class: 'cmd-banner'
+                    class: 'cmd-banner',
+                    outputClass: 'output-banner'
                 },
                 clear: {
                     content: '',
-                    class: 'cmd-clear'
+                    class: 'cmd-clear',
+                    outputClass: ''
                 }
             };
 
@@ -285,7 +299,6 @@
                 const line = document.createElement('div');
                 line.className = 'prompt-line';
                 
-                // Determinar la clase de color basada en el comando
                 let commandClass = 'command';
                 if (commands[command]) {
                     commandClass += ' ' + commands[command].class;
@@ -296,8 +309,11 @@
                 return line;
             }
 
-            function addOutput(content) {
+            function addOutput(content, command) {
                 const output = document.createElement('div');
+                if (commands[command] && commands[command].outputClass) {
+                    output.className = commands[command].outputClass;
+                }
                 output.innerHTML = content;
                 terminalOutput.appendChild(output);
                 terminalOutput.scrollTop = terminalOutput.scrollHeight;
@@ -311,13 +327,15 @@
                 if (command === 'clear') {
                     terminalOutput.innerHTML = '';
                 } else if (commands[command]) {
-                    addOutput(commands[command].content);
+                    addOutput(commands[command].content, command);
                 } else {
-                    addOutput(`<span class="error">Comanda no reconeguda: ${command}. Escriu '<span class="cmd-help">help</span>' per veure opcions.</span>`);
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'error';
+                    errorDiv.innerHTML = `Comanda no reconeguda: ${command}. Escriu '<span class="cmd-help">help</span>' per veure opcions.`;
+                    terminalOutput.appendChild(errorDiv);
                 }
             }
 
-            // Manejar el evento de teclado
             commandInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -329,15 +347,12 @@
                 }
             });
 
-            // Enfoque automático al campo de entrada
             commandInput.focus();
             
-            // Delegación de eventos para clicks
             document.addEventListener('click', function() {
                 commandInput.focus();
             });
 
-            // Manejar el evento de los botones de la terminal
             document.querySelector('.button-red').addEventListener('click', function() {
                 if (confirm('Vols tancar la terminal?')) {
                     window.close();
@@ -346,13 +361,16 @@
 
             document.querySelector('.button-yellow').addEventListener('click', function() {
                 terminalOutput.innerHTML = '';
-                addOutput('<span class="highlight">Terminal minimitzada. Feu clic a qualsevol lloc per continuar.</span>');
+                const message = document.createElement('div');
+                message.className = 'highlight';
+                message.textContent = 'Terminal minimitzada. Feu clic a qualsevol lloc per continuar.';
+                terminalOutput.appendChild(message);
             });
 
             document.querySelector('.button-green').addEventListener('click', function() {
                 terminalOutput.innerHTML = '';
                 addCommandLine('banner');
-                addOutput(commands.banner.content);
+                addOutput(commands.banner.content, 'banner');
             });
         });
     </script>
