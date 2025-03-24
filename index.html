@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oriol Bisquert i Lopez</title>
+    <title>Portafolio Oriol Bisquert</title>
     <style>
         body {
             font-family: "Courier New", monospace;
@@ -25,6 +25,7 @@
             border-radius: 5px;
             overflow: hidden;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+            margin-top: 40px;
         }
         
         .terminal-header {
@@ -54,8 +55,11 @@
         .terminal-title {
             flex-grow: 1;
             text-align: center;
-            color: #aaa;
+            color: #4CAF50;
             font-size: 14px;
+            letter-spacing: 0.5px;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
         }
         
         .terminal-body {
@@ -104,34 +108,55 @@
             color: #ffeb3b;
         }
         
-        .switch-container {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+        .language-switch-container {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
             display: flex;
-            gap: 10px;
         }
         
-        .switch {
+        .language-switch {
             background: #333;
             color: #4CAF50;
             border: 1px solid #4CAF50;
-            padding: 5px 10px;
+            padding: 6px 12px;
             cursor: pointer;
             font-family: "Courier New", monospace;
             font-size: 14px;
             border-radius: 3px;
+            text-align: center;
+            min-width: 80px;
         }
         
-        .switch:hover {
+        .language-switch:hover {
             background: #444;
+        }
+        
+        @media (max-width: 600px) {
+            .language-switch {
+                padding: 5px 8px;
+                font-size: 13px;
+                min-width: 70px;
+            }
+            
+            .terminal-container {
+                margin-top: 30px;
+            }
+            
+            .terminal-body {
+                padding: 15px;
+            }
+            
+            .terminal-title {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="switch-container">
-        <div class="switch" onclick="toggleLanguage()">CAT/ENG</div>
-        <div class="switch" onclick="toggleDarkMode()">MODE</div>
+    <div class="language-switch-container">
+        <div class="language-switch" onclick="toggleLanguage()">CAT/ENG</div>
     </div>
 
     <div class="terminal-container">
@@ -141,12 +166,12 @@
                 <div class="terminal-button button-yellow"></div>
                 <div class="terminal-button button-green"></div>
             </div>
-            <div class="terminal-title">terminal — bash — 80×24</div>
+            <div class="terminal-title">portafolio oriol bisquert — v1.0.0 — 80×24</div>
         </div>
         
         <div class="terminal-body">
             <div class="output">
-                <span class="prompt">oriolbisquert@terminal:~$</span> <span class="command">cat sobre_mi.txt</span>
+                <span class="prompt">oriolbisquert@terminal:~$</span> <span class="command">cat sobremi.txt</span>
             </div>
             
             <div class="section" id="about">
@@ -155,23 +180,14 @@
             </div>
 
             <div class="output">
-                <span class="prompt">oriolbisquert@terminal:~$</span> <span class="command">ls -l projectes/</span>
+                <span class="prompt">oriolbisquert@terminal:~$</span> <span class="command">ls -1 projectes</span>
             </div>
             
             <div class="section" id="projects">
-                <div><span class="highlight">■ Universitat</span> 2024-</div>
-                <div><span class="highlight">■ Hackatons</span> 2023-2024</div>
-                <div><span class="highlight">■ Projectes Audiovisuals</span> 2023</div>
-                <div><span class="highlight">■ Programació</span> 2022</div>
-            </div>
-
-            <div class="output">
-                <span class="prompt">oriolbisquert@terminal:~$</span> <span class="command">contacte.sh</span>
-            </div>
-            
-            <div class="section" id="contact">
-                <div><a href="mailto:oriol@example.com" id="email">> Enviar correu</a></div>
-                <div><a href="https://linkedin.com/in/oriolbisquert" target="_blank" id="linkedin">> LinkedIn</a></div>
+                <div><span class="highlight">- Universitat</span> 2024-</div>
+                <div><span class="highlight">- Hackatons</span> 2023-2024</div>
+                <div><span class="highlight">- Projectes Audiovisuals</span> 2023</div>
+                <div><span class="highlight">- Programació</span> 2022</div>
             </div>
 
             <div class="output">
@@ -186,74 +202,26 @@
             ca: {
                 description1: "Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals.",
                 description2: "Apassionat per la informàtica i la creació audiovisual.",
-                email: "> Enviar correu",
-                linkedin: "> LinkedIn",
                 projects: [
-                    "■ Universitat 2024-",
-                    "■ Hackatons 2023-2024",
-                    "■ Projectes Audiovisuals 2023",
-                    "■ Programació 2022"
+                    "- Universitat 2024-",
+                    "- Hackatons 2023-2024",
+                    "- Projectes Audiovisuals 2023",
+                    "- Programació 2022"
                 ],
                 prompt: "oriolbisquert@terminal:~$"
             },
             en: {
                 description1: "Oriol Bisquert i Lopez is an engineering student specializing in audiovisual systems.",
                 description2: "Passionate about computing and audiovisual creation.",
-                email: "> Send email",
-                linkedin: "> LinkedIn",
                 projects: [
-                    "■ University 2024-",
-                    "■ Hackathons 2023-2024",
-                    "■ Audiovisual Projects 2023",
-                    "■ Programming 2022"
+                    "- University 2024-",
+                    "- Hackathons 2023-2024",
+                    "- Audiovisual Projects 2023",
+                    "- Programming 2022"
                 ],
                 prompt: "oriolbisquert@terminal:~$"
             }
         };
-
-        function toggleDarkMode() {
-            const body = document.body;
-            const terminalBody = document.querySelector('.terminal-body');
-            const terminalHeader = document.querySelector('.terminal-header');
-            
-            if (body.style.backgroundColor === "rgb(30, 30, 30)") {
-                // Cambiar a modo claro
-                body.style.backgroundColor = "#f5f5f5";
-                terminalBody.style.backgroundColor = "#ffffff";
-                terminalBody.style.color = "#333333";
-                terminalHeader.style.backgroundColor = "#e0e0e0";
-                terminalHeader.style.borderBottomColor = "#ccc";
-                document.querySelector('.terminal-title').style.color = "#666";
-                
-                document.querySelectorAll('.prompt').forEach(el => el.style.color = "#2e7d32");
-                document.querySelectorAll('.command').forEach(el => el.style.color = "#333333");
-                document.querySelectorAll('a').forEach(el => el.style.color = "#1565c0");
-                document.querySelectorAll('.highlight').forEach(el => el.style.color = "#d84315");
-                document.querySelectorAll('.switch').forEach(el => {
-                    el.style.background = "#e0e0e0";
-                    el.style.color = "#2e7d32";
-                    el.style.borderColor = "#2e7d32";
-                });
-            } else {
-                // Cambiar a modo oscuro
-                body.style.backgroundColor = "#121212";
-                terminalBody.style.backgroundColor = "#1e1e1e";
-                terminalBody.style.color = "#e0e0e0";
-                terminalHeader.style.backgroundColor = "#333";
-                terminalHeader.style.borderBottomColor = "#222";
-                document.querySelector('.terminal-title').style.color = "#aaa";
-                
-                document.querySelectorAll('.prompt').forEach(el => el.style.color = "#4CAF50");
-                document.querySelectorAll('.command').forEach(el => el.style.color = "#e0e0e0");
-                document.querySelectorAll('a').forEach(el => el.style.color = "#64b5f6");
-                document.querySelectorAll('.highlight').forEach(el => el.style.color = "#ffeb3b");
-                document.querySelectorAll('.switch').forEach(el => {
-                    el.style.background = "#333";
-                    el.style.color = "#4CAF50";
-                    el.style.borderColor = "#4CAF50";
-                });
-            }
-        }
 
         function toggleLanguage() {
             const currentLang = document.documentElement.lang;
@@ -263,24 +231,17 @@
             // Actualizar textos
             document.getElementById('description1').textContent = translations[newLang].description1;
             document.getElementById('description2').textContent = translations[newLang].description2;
-            document.getElementById('email').textContent = translations[newLang].email;
-            document.getElementById('linkedin').textContent = translations[newLang].linkedin;
             
             // Actualizar proyectos
             const projectElements = document.querySelectorAll('#projects div');
             translations[newLang].projects.forEach((project, index) => {
                 if (projectElements[index]) {
-                    projectElements[index].innerHTML = project.replace('■', '<span class="highlight">■</span>');
+                    projectElements[index].innerHTML = project.replace('-', '<span class="highlight">-</span>');
                 }
             });
             
-            // Actualizar prompts
-            document.querySelectorAll('.prompt').forEach(el => {
-                el.textContent = translations[newLang].prompt;
-            });
-            
             // Cambiar texto del botón
-            document.querySelector('.switch:first-child').textContent = currentLang === "ca" ? "ENG/CAT" : "CAT/ENG";
+            document.querySelector('.language-switch').textContent = currentLang === "ca" ? "ENG/CAT" : "CAT/ENG";
         }
 
         // Efecto de escritura inicial
