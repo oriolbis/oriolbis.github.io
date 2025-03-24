@@ -17,19 +17,17 @@
         
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
             font-family: "Courier New", monospace;
             background-color: var(--bg-color);
             color: var(--text-color);
-            margin: 0;
-            padding: 15px;
             min-height: 100vh;
             line-height: 1.6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            overflow-x: hidden;
         }
         
         .terminal-container {
@@ -39,7 +37,8 @@
             border-radius: 5px;
             overflow: hidden;
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
-            margin: 50px 0 20px;
+            margin: 50px auto;
+            position: relative;
         }
         
         .terminal-header {
@@ -48,12 +47,9 @@
             display: flex;
             align-items: center;
             border-bottom: 1px solid #222;
-            position: relative;
-            transition: background-color 0.3s;
-        }
-        
-        .terminal-header.active {
-            background-color: #444 !important;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         
         .terminal-buttons {
@@ -90,7 +86,7 @@
         .terminal-body {
             background-color: var(--terminal-bg);
             padding: clamp(15px, 3vw, 20px);
-            overflow: auto;
+            min-height: 60vh;
         }
         
         .prompt {
@@ -104,12 +100,28 @@
         
         .command {
             color: var(--text-color);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .command.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .output {
             margin: clamp(10px, 2vw, 15px) 0;
             white-space: pre-wrap;
             word-break: break-word;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .output.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         .continuation:before {
@@ -226,8 +238,8 @@
             </div>
             
             <div class="section" id="about">
-                <div id="description1">Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals.</div>
-                <div class="continuation" id="description2">Apassionat per la informàtica i la creació audiovisual.</div>
+                <div class="output" id="description1">Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals.</div>
+                <div class="output continuation" id="description2">Apassionat per la informàtica i la creació audiovisual.</div>
             </div>
 
             <div class="output">
@@ -235,30 +247,30 @@
             </div>
             
             <div class="section" id="projects">
-                <div><span class="highlight">- Universitat</span> 2024-</div>
-                <div><span class="highlight">- Hackatons</span> 2023-2024</div>
-                <div><span class="highlight">- Projectes Audiovisuals</span> 2023</div>
-                <div><span class="highlight">- Programació</span> 2022</div>
+                <div class="output"><span class="highlight">- Universitat</span> 2024-</div>
+                <div class="output"><span class="highlight">- Hackatons</span> 2023-2024</div>
+                <div class="output"><span class="highlight">- Projectes Audiovisuals</span> 2023</div>
+                <div class="output"><span class="highlight">- Programació</span> 2022</div>
             </div>
 
-            <!-- SECCIÓN DE CONTACTOS ORIGINAL -->
+            <!-- SECCIÓN DE CONTACTOS -->
             <div class="output">
                 <span class="prompt">oriolbisquert@terminal</span> <span class="command">contacte.sh</span>
             </div>
             
             <div class="contact-teams">
                 <div class="contact">
-                    <strong id="contact-title">■ [CONTACTE] [1]</strong><br>
-                    <a href="mailto:oriol@example.com" target="_blank" id="email">Correu ↗</a><br>
-                    <a href="https://linkedin.com/in/oriolbisquert" target="_blank" id="linkedin">LinkedIn ↗</a>
+                    <div class="output"><strong id="contact-title">■ [CONTACTE] [1]</strong></div>
+                    <div class="output"><a href="mailto:oriol@example.com" target="_blank" id="email">Correu ↗</a></div>
+                    <div class="output"><a href="https://linkedin.com/in/oriolbisquert" target="_blank" id="linkedin">LinkedIn ↗</a></div>
                 </div>
                 
                 <div class="teams">
-                    <strong id="teams-title">■ [EQUIPS] [2]</strong><br>
-                    <span class="university" id="university">■ Universitat</span> 2024-<br>
-                    <span class="hackathons" id="hackathons">■ Hackatons</span> 2023-2024<br>
-                    <span class="audiovisual" id="audiovisual">■ Projectes Audiovisuals</span> 2023<br>
-                    <span class="programming" id="programming">■ Programació</span> 2022<br>
+                    <div class="output"><strong id="teams-title">■ [EQUIPS] [2]</strong></div>
+                    <div class="output"><span class="university" id="university">■ Universitat</span> 2024-</div>
+                    <div class="output"><span class="hackathons" id="hackathons">■ Hackatons</span> 2023-2024</div>
+                    <div class="output"><span class="audiovisual" id="audiovisual">■ Projectes Audiovisuals</span> 2023</div>
+                    <div class="output"><span class="programming" id="programming">■ Programació</span> 2022</div>
                 </div>
             </div>
 
@@ -321,7 +333,20 @@
             document.querySelector('.language-switch').textContent = currentLang === "ca" ? "ENG/CAT" : "CAT/ENG";
         }
 
-        // Efecto de escritura mejorado
+        // Efecto de aparición al hacer scroll
+        function checkVisibility() {
+            const elements = document.querySelectorAll('.command, .output');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const isVisible = (rect.top <= window.innerHeight * 0.8);
+                
+                if (isVisible) {
+                    el.classList.add('visible');
+                }
+            });
+        }
+
+        // Efecto de escritura para el cursor
         function typeWriter() {
             const elements = document.querySelectorAll('.command');
             let delay = 500;
@@ -349,19 +374,16 @@
             });
         }
 
-        // Efecto de terminal activa
-        document.addEventListener('click', function() {
-            const header = document.querySelector('.terminal-header');
-            header.classList.add('active');
-            setTimeout(() => {
-                header.classList.remove('active');
-            }, 200);
-        });
-
+        // Inicialización
         window.onload = function() {
             setTimeout(typeWriter, 500);
+            checkVisibility(); // Mostrar elementos iniciales visibles
             
-            // Enfocar la terminal al cargar
+            // Mostrar elementos al hacer scroll
+            window.addEventListener('scroll', checkVisibility);
+            window.addEventListener('resize', checkVisibility);
+            
+            // Mostrar la terminal al cargar
             document.querySelector('.terminal-container').scrollIntoView({
                 behavior: 'smooth'
             });
