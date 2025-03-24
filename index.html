@@ -2,392 +2,138 @@
 <html lang="ca">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Portafolio Oriol Bisquert</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal | Oriol Bisquert</title>
     <style>
-        :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #ffeb3b;
-            --bg-color: #121212;
-            --text-color: #e0e0e0;
-            --terminal-bg: #1e1e1e;
-            --header-bg: #333;
-            --link-color: #64b5f6;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
         body {
-            font-family: "Courier New", monospace;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
+            font-family: 'Courier New', monospace;
+            background-color: #121212;
+            color: #00ff00;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
         }
         
-        .terminal-container {
-            width: 100%;
-            max-width: 800px;
-            border: 1px solid #333;
-            border-radius: 5px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
-            margin: 50px auto;
-            position: relative;
-        }
-        
-        .terminal-header {
-            background-color: var(--header-bg);
-            padding: 8px 15px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #222;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .terminal-buttons {
-            display: flex;
-            gap: 8px;
-            margin-right: 15px;
-        }
-        
-        .terminal-button {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        
-        .button-red { background-color: #ff5f56; }
-        .button-yellow { background-color: #ffbd2e; }
-        .button-green { background-color: #27c93f; }
-        
-        .terminal-title {
-            flex-grow: 1;
-            text-align: center;
-            color: var(--primary-color);
-            font-size: clamp(12px, 2.5vw, 14px);
-            letter-spacing: 0.5px;
-            font-weight: bold;
-            text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            padding: 0 10px;
-        }
-        
-        .terminal-body {
-            background-color: var(--terminal-bg);
-            padding: clamp(15px, 3vw, 20px);
-            min-height: 60vh;
+        .terminal {
+            max-width: 700px;
+            margin: 0 auto;
         }
         
         .prompt {
-            color: var(--primary-color);
-        }
-        
-        .prompt:after {
-            content: " $";
-            color: var(--primary-color);
+            color: #4CAF50;
         }
         
         .command {
-            color: var(--text-color);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        
-        .command.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .output {
-            margin: clamp(10px, 2vw, 15px) 0;
-            white-space: pre-wrap;
-            word-break: break-word;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        
-        .output.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .continuation:before {
-            content: "> ";
-            color: var(--primary-color);
-            margin-left: 2ch;
-        }
-        
-        a {
-            color: var(--link-color);
-            text-decoration: none;
-        }
-        
-        a:hover {
-            text-decoration: underline;
+            color: #ffffff;
         }
         
         .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: #00ff00;
             animation: blink 1s infinite;
+            vertical-align: middle;
         }
         
         @keyframes blink {
-            0%, 100% { opacity: 1; }
             50% { opacity: 0; }
         }
         
-        .section {
-            margin-bottom: clamp(15px, 3vw, 25px);
-        }
-        
-        .highlight {
-            color: var(--secondary-color);
-        }
-        
-        /* Estilo original de contactos */
-        .contact-teams {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            margin-top: 30px;
-            text-align: left;
-        }
-        
-        .contact a, .teams span {
-            color: inherit;
-            text-decoration: none;
-        }
-        
-        .contact a:hover, .teams span:hover {
-            text-decoration: underline;
-        }
-        
-        .university { color: red; }
-        .hackathons { color: blue; }
-        .audiovisual { color: red; }
-        .programming { color: red; }
-        
-        .language-switch-container {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 100;
+        #input-line {
             display: flex;
         }
         
-        .language-switch {
-            background: var(--header-bg);
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            padding: clamp(4px, 1.5vw, 6px) clamp(8px, 2vw, 12px);
-            cursor: pointer;
-            font-family: "Courier New", monospace;
-            font-size: clamp(12px, 3vw, 14px);
-            border-radius: 3px;
-            text-align: center;
-            min-width: clamp(60px, 15vw, 80px);
-        }
-        
-        .language-switch:hover {
-            background: #444;
-        }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            .contact-teams {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .contact, .teams {
-                width: 100%;
-            }
+        #command-input {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            width: 80%;
+            outline: none;
+            caret-color: #00ff00;
         }
     </style>
 </head>
 <body>
-    <div class="language-switch-container">
-        <div class="language-switch" onclick="toggleLanguage()">CAT/ENG</div>
-    </div>
-
-    <div class="terminal-container">
-        <div class="terminal-header">
-            <div class="terminal-buttons">
-                <div class="terminal-button button-red"></div>
-                <div class="terminal-button button-yellow"></div>
-                <div class="terminal-button button-green"></div>
+    <div class="terminal" id="terminal">
+        <div id="output">
+            <div class="line">
+                <span class="prompt">oriolbisquert@portfolio:~$</span> <span class="command">help</span>
+                <div class="output">
+                    Comandes disponibles:<br>
+                    about       Mostra informació personal<br>
+                    projects    Llista de projectes<br>
+                    contact     Mostra contacte<br>
+                    clear       Neteja la terminal
+                </div>
             </div>
-            <div class="terminal-title">portafolio oriol bisquert — v1.0.0 — 80×24</div>
         </div>
         
-        <div class="terminal-body">
-            <div class="output">
-                <span class="prompt">oriolbisquert@terminal</span> <span class="command">cat sobremi.txt</span>
-            </div>
-            
-            <div class="section" id="about">
-                <div class="output" id="description1">Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals.</div>
-                <div class="output continuation" id="description2">Apassionat per la informàtica i la creació audiovisual.</div>
-            </div>
-
-            <div class="output">
-                <span class="prompt">oriolbisquert@terminal</span> <span class="command">ls -1 projectes</span>
-            </div>
-            
-            <div class="section" id="projects">
-                <div class="output"><span class="highlight">- Universitat</span> 2024-</div>
-                <div class="output"><span class="highlight">- Hackatons</span> 2023-2024</div>
-                <div class="output"><span class="highlight">- Projectes Audiovisuals</span> 2023</div>
-                <div class="output"><span class="highlight">- Programació</span> 2022</div>
-            </div>
-
-            <!-- SECCIÓN DE CONTACTOS -->
-            <div class="output">
-                <span class="prompt">oriolbisquert@terminal</span> <span class="command">contacte.sh</span>
-            </div>
-            
-            <div class="contact-teams">
-                <div class="contact">
-                    <div class="output"><strong id="contact-title">■ [CONTACTE] [1]</strong></div>
-                    <div class="output"><a href="mailto:oriol@example.com" target="_blank" id="email">Correu ↗</a></div>
-                    <div class="output"><a href="https://linkedin.com/in/oriolbisquert" target="_blank" id="linkedin">LinkedIn ↗</a></div>
-                </div>
-                
-                <div class="teams">
-                    <div class="output"><strong id="teams-title">■ [EQUIPS] [2]</strong></div>
-                    <div class="output"><span class="university" id="university">■ Universitat</span> 2024-</div>
-                    <div class="output"><span class="hackathons" id="hackathons">■ Hackatons</span> 2023-2024</div>
-                    <div class="output"><span class="audiovisual" id="audiovisual">■ Projectes Audiovisuals</span> 2023</div>
-                    <div class="output"><span class="programming" id="programming">■ Programació</span> 2022</div>
-                </div>
-            </div>
-
-            <div class="output">
-                <span class="prompt">oriolbisquert@terminal</span> <span class="command" id="cursor-line">_<span class="cursor">|</span></span>
-            </div>
+        <div id="input-line">
+            <span class="prompt">oriolbisquert@portfolio:~$</span>
+            <input type="text" id="command-input" autofocus>
+            <span class="cursor"></span>
         </div>
     </div>
 
     <script>
-        // Datos de traducción
-        const translations = {
-            ca: {
-                description1: "Oriol Bisquert i Lopez és un estudiant d'enginyeria especialitzat en sistemes audiovisuals.",
-                description2: "Apassionat per la informàtica i la creació audiovisual.",
-                "contact-title": "■ [CONTACTE] [1]",
-                email: "Correu ↗",
-                linkedin: "LinkedIn ↗",
-                "teams-title": "■ [EQUIPS] [2]",
-                university: "■ Universitat",
-                hackathons: "■ Hackatons",
-                audiovisual: "■ Projectes Audiovisuals",
-                programming: "■ Programació",
-                prompt: "oriolbisquert@terminal"
-            },
-            en: {
-                description1: "Oriol Bisquert i Lopez is an engineering student specializing in audiovisual systems.",
-                description2: "Passionate about computing and audiovisual creation.",
-                "contact-title": "■ [CONTACT] [1]",
-                email: "Email ↗",
-                linkedin: "LinkedIn ↗",
-                "teams-title": "■ [TEAMS] [2]",
-                university: "■ University",
-                hackathons: "■ Hackathons",
-                audiovisual: "■ Audiovisual Projects",
-                programming: "■ Programming",
-                prompt: "oriolbisquert@terminal"
+        const commands = {
+            about: `
+                Oriol Bisquert i Lopez<br>
+                Estudiant d'Enginyeria Audiovisual<br>
+                Especialitat: Sistemes Digitals<br>
+                Passions: Programació, Fotografia, Muntatge
+            `,
+            projects: `
+                Projectes destacats:<br>
+                - Editor de vídeo amb IA (Python/OpenCV)<br>
+                - Motor de streaming (Go/FFmpeg)<br>
+                - Sistema IoT per hackathon (C++)
+            `,
+            contact: `
+                Contacte:<br>
+                ✉️ oriol@exemple.cat<br>
+                🔗 github.com/oriolbis<br>
+                📱 +34 666 555 444
+            `
+        };
+
+        const terminal = document.getElementById('terminal');
+        const output = document.getElementById('output');
+        const commandInput = document.getElementById('command-input');
+
+        commandInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const command = commandInput.value.trim();
+                commandInput.value = '';
+                
+                // Afegir línia de comanda
+                const commandLine = document.createElement('div');
+                commandLine.className = 'line';
+                commandLine.innerHTML = `<span class="prompt">oriolbisquert@portfolio:~$</span> <span class="command">${command}</span>`;
+                output.appendChild(commandLine);
+                
+                // Processar comanda
+                if (command === 'clear') {
+                    output.innerHTML = '';
+                } else if (commands[command]) {
+                    const response = document.createElement('div');
+                    response.className = 'output';
+                    response.innerHTML = commands[command];
+                    output.appendChild(response);
+                } else if (command) {
+                    const error = document.createElement('div');
+                    error.className = 'output';
+                    error.innerHTML = `Comanda no trobada: ${command}`;
+                    output.appendChild(error);
+                }
+                
+                // Desplaçar-se al final
+                terminal.scrollTop = terminal.scrollHeight;
             }
-        };
-
-        function toggleLanguage() {
-            const currentLang = document.documentElement.lang;
-            const newLang = currentLang === "ca" ? "en" : "ca";
-            document.documentElement.lang = newLang;
-            
-            // Actualizar todos los textos
-            Object.keys(translations[newLang]).forEach(key => {
-                const element = document.getElementById(key);
-                if (element) {
-                    element.textContent = translations[newLang][key];
-                }
-            });
-            
-            // Actualizar prompts
-            document.querySelectorAll('.prompt').forEach(el => {
-                el.textContent = translations[newLang].prompt;
-            });
-            
-            // Cambiar texto del botón
-            document.querySelector('.language-switch').textContent = currentLang === "ca" ? "ENG/CAT" : "CAT/ENG";
-        }
-
-        // Efecto de aparición al hacer scroll
-        function checkVisibility() {
-            const elements = document.querySelectorAll('.command, .output');
-            elements.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                const isVisible = (rect.top <= window.innerHeight * 0.8);
-                
-                if (isVisible) {
-                    el.classList.add('visible');
-                }
-            });
-        }
-
-        // Efecto de escritura para el cursor
-        function typeWriter() {
-            const elements = document.querySelectorAll('.command');
-            let delay = 500;
-            
-            elements.forEach((el, index) => {
-                const text = el.textContent.replace('_', '').replace('|', '');
-                el.textContent = '';
-                let i = 0;
-                
-                setTimeout(() => {
-                    function typing() {
-                        if (i < text.length) {
-                            el.textContent += text.charAt(i);
-                            i++;
-                            const speed = Math.random() * (i > text.length/2 ? 120 : 80) + 30;
-                            setTimeout(typing, speed);
-                        } else if (index === elements.length - 1) {
-                            el.innerHTML += '<span class="cursor">|</span>';
-                        }
-                    }
-                    typing();
-                }, delay);
-                
-                delay += text.length * 50 + 500;
-            });
-        }
-
-        // Inicialización
-        window.onload = function() {
-            setTimeout(typeWriter, 500);
-            checkVisibility(); // Mostrar elementos iniciales visibles
-            
-            // Mostrar elementos al hacer scroll
-            window.addEventListener('scroll', checkVisibility);
-            window.addEventListener('resize', checkVisibility);
-            
-            // Mostrar la terminal al cargar
-            document.querySelector('.terminal-container').scrollIntoView({
-                behavior: 'smooth'
-            });
-        };
+        });
     </script>
 </body>
 </html>
