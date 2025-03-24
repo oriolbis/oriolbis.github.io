@@ -11,20 +11,67 @@
             color: #00ff00;
             margin: 0;
             padding: 20px;
-            line-height: 1.5;
+            line-height: 1.4;
         }
         
-        .terminal {
+        .terminal-container {
             max-width: 700px;
             margin: 0 auto;
+            border: 1px solid #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .terminal-header {
+            background-color: #222;
+            padding: 8px 15px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .terminal-buttons {
+            display: flex;
+            gap: 6px;
+            margin-right: 12px;
+        }
+        
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .button-red { background-color: #ff5f56; }
+        .button-yellow { background-color: #ffbd2e; }
+        .button-green { background-color: #27c93f; }
+        
+        .terminal-title {
+            color: #4CAF50;
+            font-size: 14px;
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .terminal-body {
+            padding: 20px;
+            min-height: 300px;
+        }
+        
+        .prompt-line {
+            display: flex;
+            margin-bottom: 1em;
         }
         
         .prompt {
             color: #4CAF50;
+            margin-right: 5px;
+            white-space: nowrap;
         }
         
         .command {
             color: #ffffff;
+            flex-grow: 1;
         }
         
         .cursor {
@@ -40,6 +87,19 @@
             50% { opacity: 0; }
         }
         
+        a {
+            color: #00ff00;
+            text-decoration: underline;
+        }
+        
+        .highlight {
+            color: #ffeb3b;
+        }
+        
+        #terminal-output {
+            margin-bottom: 10px;
+        }
+        
         #input-line {
             display: flex;
         }
@@ -47,92 +107,133 @@
         #command-input {
             background: transparent;
             border: none;
-            color: #ffffff;
+            color: white;
             font-family: 'Courier New', monospace;
             font-size: 16px;
-            width: 80%;
+            width: 100%;
             outline: none;
             caret-color: #00ff00;
         }
     </style>
 </head>
 <body>
-    <div class="terminal" id="terminal">
-        <div id="output">
-            <div class="line">
-                <span class="prompt">oriolbisquert@portfolio:~$</span> <span class="command">help</span>
-                <div class="output">
-                    Comandes disponibles:<br>
-                    about       Mostra informació personal<br>
-                    projects    Llista de projectes<br>
-                    contact     Mostra contacte<br>
-                    clear       Neteja la terminal
-                </div>
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="terminal-buttons">
+                <div class="terminal-button button-red"></div>
+                <div class="terminal-button button-yellow"></div>
+                <div class="terminal-button button-green"></div>
             </div>
+            <div class="terminal-title">oriolbisquert@portfolio: ~</div>
         </div>
         
-        <div id="input-line">
-            <span class="prompt">oriolbisquert@portfolio:~$</span>
-            <input type="text" id="command-input" autofocus>
-            <span class="cursor"></span>
+        <div class="terminal-body">
+            <div id="terminal-output">
+                <div class="prompt-line">
+                    <span class="prompt">oriolbisquert@portfolio:~$</span>
+                    <span class="command">banner</span>
+                </div>
+                <div>
+                    <pre>
+  ___  _  _  ___  _  _  ___  ___  ___ 
+ | _ \| || || __|| \| || _ \| __|| _ \
+ |  _/| __ || _| | .` ||   /| _| |   /
+ |_|  |_||_||___||_|\_||_|_\|___||_|_\
+                    </pre>
+                    <p>Benvingut al meu portafoli terminal. Escriu 'help' per veure les comandes disponibles.</p>
+                </div>
+            </div>
+            
+            <div id="input-line">
+                <span class="prompt">oriolbisquert@portfolio:~$</span>
+                <input type="text" id="command-input" autofocus>
+                <span class="cursor"></span>
+            </div>
         </div>
     </div>
 
     <script>
         const commands = {
+            help: `
+                <strong>Comandes disponibles:</strong><br>
+                about       Mostra informació sobre mi<br>
+                projects    Mostra els meus projectes<br>
+                contact     Mostra informació de contacte<br>
+                clear       Neteja la terminal<br>
+                banner      Mostra el banner d'inici
+            `,
             about: `
-                Oriol Bisquert i Lopez<br>
-                Estudiant d'Enginyeria Audiovisual<br>
-                Especialitat: Sistemes Digitals<br>
-                Passions: Programació, Fotografia, Muntatge
+                <strong>Oriol Bisquert i Lopez</strong><br>
+                Estudiant d'Enginyeria en Sistemes Audiovisuals<br>
+                Especialitat: Processament digital de senyals<br><br>
+                
+                <strong>Passions:</strong><br>
+                - Programació (Python, C++)<br>
+                - Edició de vídeo i fotografia<br>
+                - Tecnologies multimèdia
             `,
             projects: `
-                Projectes destacats:<br>
-                - Editor de vídeo amb IA (Python/OpenCV)<br>
-                - Motor de streaming (Go/FFmpeg)<br>
-                - Sistema IoT per hackathon (C++)
+                <strong>Projectes destacats:</strong><br>
+                <span class="highlight">■ Editor de vídeo amb IA</span> (Python/OpenCV)<br>
+                <span class="highlight">■ Motor de streaming</span> (Go/FFmpeg)<br>
+                <span class="highlight">■ Sistema IoT per hackathons</span> (C++)<br>
+                <span class="highlight">■ Aplicació de gestió audiovisual</span> (JavaScript)
             `,
             contact: `
-                Contacte:<br>
-                ✉️ oriol@exemple.cat<br>
-                🔗 github.com/oriolbis<br>
+                <strong>Contacte:</strong><br>
+                ✉️ <a href="mailto:oriol@example.com">oriol@example.com</a><br>
+                🔗 <a href="https://linkedin.com/in/oriolbisquert">LinkedIn</a><br>
+                🐙 <a href="https://github.com/oriolbis">GitHub</a><br>
                 📱 +34 666 555 444
+            `,
+            banner: `
+                <pre>
+  ___  _  _  ___  _  _  ___  ___  ___ 
+ | _ \| || || __|| \| || _ \| __|| _ \
+ |  _/| __ || _| | .` ||   /| _| |   /
+ |_|  |_||_||___||_|\_||_|_\|___||_|_\
+                </pre>
             `
         };
 
-        const terminal = document.getElementById('terminal');
-        const output = document.getElementById('output');
+        const terminalOutput = document.getElementById('terminal-output');
         const commandInput = document.getElementById('command-input');
+
+        function addCommandLine(command) {
+            const line = document.createElement('div');
+            line.className = 'prompt-line';
+            line.innerHTML = `<span class="prompt">oriolbisquert@portfolio:~$</span> <span class="command">${command}</span>`;
+            terminalOutput.appendChild(line);
+            return line;
+        }
+
+        function addOutput(content) {
+            const output = document.createElement('div');
+            output.innerHTML = content;
+            terminalOutput.appendChild(output);
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        }
 
         commandInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
-                const command = commandInput.value.trim();
+                const command = commandInput.value.trim().toLowerCase();
                 commandInput.value = '';
                 
-                // Afegir línia de comanda
-                const commandLine = document.createElement('div');
-                commandLine.className = 'line';
-                commandLine.innerHTML = `<span class="prompt">oriolbisquert@portfolio:~$</span> <span class="command">${command}</span>`;
-                output.appendChild(commandLine);
+                addCommandLine(command);
                 
-                // Processar comanda
                 if (command === 'clear') {
-                    output.innerHTML = '';
+                    terminalOutput.innerHTML = '';
                 } else if (commands[command]) {
-                    const response = document.createElement('div');
-                    response.className = 'output';
-                    response.innerHTML = commands[command];
-                    output.appendChild(response);
+                    addOutput(commands[command]);
                 } else if (command) {
-                    const error = document.createElement('div');
-                    error.className = 'output';
-                    error.innerHTML = `Comanda no trobada: ${command}`;
-                    output.appendChild(error);
+                    addOutput(`<span style="color:#ff5555">Comanda no reconeguda: ${command}. Escriu 'help' per veure opcions.</span>`);
                 }
-                
-                // Desplaçar-se al final
-                terminal.scrollTop = terminal.scrollHeight;
             }
+        });
+
+        // Focus automàtic al camp d'entrada
+        document.addEventListener('click', function() {
+            commandInput.focus();
         });
     </script>
 </body>
