@@ -188,22 +188,25 @@
         
         <div class="terminal-body">
             <div id="terminal-output">
-                <div class="prompt-line">
-                    <span class="prompt">oriolbisquert@portfolio:~$</span>
-                    <span class="command cmd-banner">banner</span>
-                </div>
-                <div class="output-banner">
-                    <div class="banner-container">
-                        <pre style="color: #00BCD4">
+                <!-- Contenidor del banner inicial amb ID per preservar-lo -->
+                <div id="initial-content">
+                    <div class="prompt-line">
+                        <span class="prompt">oriolbisquert@portfolio:~$</span>
+                        <span class="command cmd-banner">banner</span>
+                    </div>
+                    <div class="output-banner">
+                        <div class="banner-container">
+                            <pre style="color: #00BCD4">
 ██████╗  ██████╗ ██████╗ ████████╗  █████╗ ███████╗ ██████╗ ██╗     
 ██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔════╝██╔═══██╗██║     
 ██████╔╝██║   ██║██████╔╝   ██║   ███████║█████╗  ██║   ██║██║     
 ██╔═══╝ ██║   ██║██╔══██╗   ██║   ██╔══██║██╔══╝  ██║   ██║██║     
 ██║     ╚██████╔╝██║  ██║   ██║   ██║  ██║██║     ╚██████╔╝███████╗
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝
-                        </pre>
-                        <p>Benvingut al meu portafoli terminal</p>
-                        <p>Escriu '<span style="color: #4CAF50">help</span>' per veure les comandes disponibles</p>
+                            </pre>
+                            <p>Benvingut al meu portafoli terminal</p>
+                            <p>Escriu '<span style="color: #4CAF50">help</span>' per veure les comandes disponibles</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -220,6 +223,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const terminalOutput = document.getElementById('terminal-output');
             const commandInput = document.getElementById('command-input');
+            const initialContent = document.getElementById('initial-content');
             
             const commands = {
                 help: {
@@ -355,7 +359,12 @@
                 addCommandLine(command);
                 
                 if (command === 'clear') {
+                    // Guardem el contingut inicial
+                    const initialHTML = initialContent.innerHTML;
+                    // Borrem tot
                     terminalOutput.innerHTML = '';
+                    // Restablim només el contingut inicial
+                    terminalOutput.innerHTML = initialHTML;
                 } else if (commands[command]) {
                     addOutput(commands[command].content, command);
                 } else {
