@@ -3,32 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal | Oriol Bisquert - Enginyer en Sistemes Audiovisuals</title>
-    
-    <!-- Metaetiquetes bàsiques SEO -->
-    <meta name="description" content="Portafoli interactiu en terminal d'Oriol Bisquert, estudiant d'Enginyeria en Sistemes Audiovisuals especialitzat en processament digital de senyals i desenvolupament multimèdia">
-    
-    <meta name="keywords" content="Oriol Bisquert, portafoli desenvolupador, enginyeria audiovisual, programador Python, C++, JavaScript, processament senyal, edició vídeo, CV interactiu, desenvolupador multimèdia Barcelona">
-    
-    <meta name="author" content="Oriol Bisquert i Lopez">
-    
-    <!-- Metaetiquetes per a xarxes socials -->
-    <meta property="og:title" content="Portafoli Terminal Interactiu - Oriol Bisquert">
-    <meta property="og:description" content="Portafoli innovador en format terminal d'un futur enginyer en sistemes audiovisuals amb habilitats en programació i multimèdia">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://oriolbisquert.github.io/terminal-portfolio">
-    <meta property="og:image" content="https://oriolbisquert.github.io/terminal-portfolio/preview.png">
-    
-    <!-- Metaetiquetes específiques per a cercament de feina -->
-    <meta name="job-title" content="Enginyer en Sistemes Audiovisuals | Desenvolupador Multimèdia">
-    <meta name="skills" content="Python, C++, JavaScript, FFmpeg, OpenCV, TensorFlow, React, Node.js, Web Audio API">
-    
-    <!-- Metaetiquetes de localització -->
-    <meta name="geo.region" content="ES-CT">
-    <meta name="geo.placename" content="Barcelona">
-    
+    <title>Terminal | Oriol Bisquert</title>
     <style>
-        /* [Tots els estils CSS originals es mantenen igual] */
         body {
             font-family: 'Courier New', monospace;
             background-color: #121212;
@@ -39,19 +15,617 @@
             transition: all 0.3s ease;
         }
         
-        /* [Resta d'estils...] */
+        body.light-mode {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .terminal-container {
+            max-width: 700px;
+            margin: 0 auto;
+            border: 1px solid #333;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .terminal-header {
+            background-color: #222;
+            padding: 8px 15px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+        }
+        
+        .terminal-buttons {
+            display: flex;
+            gap: 6px;
+            margin-right: 12px;
+        }
+        
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .button-red { background-color: #ff5f56; }
+        .button-yellow { background-color: #ffbd2e; }
+        .button-green { background-color: #27c93f; }
+        
+        .terminal-title {
+            color: #4CAF50;
+            font-size: 14px;
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        .terminal-body {
+            padding: 20px;
+            min-height: 300px;
+        }
+        
+        #terminal-output {
+            margin-bottom: 10px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        
+        .prompt-line {
+            display: flex;
+            margin-bottom: 5px;
+        }
+        
+        .prompt {
+            color: #4CAF50;
+            margin-right: 5px;
+            white-space: nowrap;
+        }
+        
+        /* Colors pels comandos a la línia d'entrada */
+        .command { 
+            color: #ffffff;
+            transition: color 0.3s ease;
+        }
+        
+        .cmd-help { color: #4CAF50; }
+        .cmd-about { color: #2196F3; }
+        .cmd-projects { color: #FF9800; }
+        .cmd-contact { color: #9C27B0; }
+        .cmd-clear { color: #f44336; }
+        .cmd-banner { color: #00BCD4; }
+        .cmd-skills { color: #8BC34A; }
+        .cmd-education { color: #FFEB3B; }
+        .cmd-secret { color: #ff00ff; }
+        
+        /* Colors pels resultats dels comandos */
+        .output-help { 
+            color: #4CAF50;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .output-about { 
+            color: #2196F3;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .output-projects { 
+            color: #FF9800;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .output-contact { color: #9C27B0; }
+        .output-banner { color: #00BCD4; }
+        .output-skills { color: #8BC34A; }
+        .output-education { color: #FFEB3B; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Estils per al banner centrat */
+        .banner-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .banner-container pre {
+            margin: 0;
+            line-height: 1.2;
+        }
+        
+        .banner-container p {
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        
+        #input-line {
+            display: flex;
+            align-items: center;
+        }
+        
+        #command-input {
+            background: transparent;
+            border: none;
+            color: inherit;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            width: 100%;
+            outline: none;
+            caret-color: #00ff00;
+            flex-grow: 1;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 16px;
+            background: #00ff00;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+        
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        
+        a {
+            color: inherit;
+            text-decoration: underline;
+        }
+        
+        .highlight {
+            color: #ffeb3b;
+        }
+        
+        .error {
+            color: #ff5555;
+        }
+        
+        .loading:after {
+            content: '...';
+            animation: dots 1.5s steps(5, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        /* Scrollbar personalizada */
+        #terminal-output::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #terminal-output::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        
+        #terminal-output::-webkit-scrollbar-thumb {
+            background: #4CAF50;
+            border-radius: 4px;
+        }
+        
+        body.light-mode #terminal-output::-webkit-scrollbar-track {
+            background: #f0f0f0;
+        }
+        
+        /* Botons temes */
+        .theme-btn {
+            padding: 5px 10px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <!-- [El contingut HTML original es manté igual] -->
     <div class="terminal-container">
-        <!-- [Tot el contingut existent...] -->
+        <div class="terminal-header">
+            <div class="terminal-buttons">
+                <div class="terminal-button button-red"></div>
+                <div class="terminal-button button-yellow"></div>
+                <div class="terminal-button button-green"></div>
+            </div>
+            <div class="terminal-title">oriolbisquert@portfolio: ~</div>
+        </div>
+        
+        <div class="terminal-body">
+            <div id="terminal-output">
+                <!-- Contenidor del banner inicial amb ID per preservar-lo -->
+                <div id="initial-content">
+                    <div class="prompt-line">
+                        <span class="prompt">oriolbisquert@portfolio:~$</span>
+                        <span class="command cmd-banner">banner</span>
+                    </div>
+                    <div class="output-banner">
+                        <div class="banner-container">
+                            <pre style="color: #00BCD4">
+██████╗  ██████╗ ██████╗ ████████╗  █████╗ ███████╗ ██████╗ ██╗     
+██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔════╝██╔═══██╗██║     
+██████╔╝██║   ██║██████╔╝   ██║   ███████║█████╗  ██║   ██║██║     
+██╔═══╝ ██║   ██║██╔══██╗   ██║   ██╔══██║██╔══╝  ██║   ██║██║     
+██║     ╚██████╔╝██║  ██║   ██║   ██║  ██║██║     ╚██████╔╝███████╗
+╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝
+                            </pre>
+                            <p>Benvingut al meu portafoli terminal</p>
+                            <p>Escriu '<span style="color: #4CAF50">help</span>' per veure les comandes disponibles</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="input-line">
+                <span class="prompt">oriolbisquert@portfolio:~$</span>
+                <input type="text" id="command-input" autofocus>
+                <span class="cursor"></span>
+            </div>
+        </div>
     </div>
 
     <script>
-        // [Tots els scripts originals es mantenen igual]
         document.addEventListener('DOMContentLoaded', function() {
-            // [Codi JavaScript original...]
+            const terminalOutput = document.getElementById('terminal-output');
+            const commandInput = document.getElementById('command-input');
+            const initialContent = document.getElementById('initial-content');
+            
+            // Històric de comandos
+            let commandHistory = [];
+            let historyIndex = -1;
+            
+            // Traduccions
+            const translations = {
+                ca: {
+                    welcome: "Benvingut",
+                    commands: "Comandes disponibles",
+                    clearConfirm: "Vols tancar la terminal?"
+                },
+                en: {
+                    welcome: "Welcome",
+                    commands: "Available commands",
+                    clearConfirm: "Do you want to close the terminal?"
+                }
+            };
+            let currentLang = 'ca';
+            
+            const commands = {
+                help: {
+                    content: `
+                        <strong>${translations[currentLang].commands}:</strong><br>
+                        <span class="cmd-about">about</span>       Mostra informació sobre mi<br>
+                        <span class="cmd-projects">projects</span>    Mostra els meus projectes<br>
+                        <span class="cmd-contact">contact</span>     Mostra informació de contacte<br>
+                        <span class="cmd-banner">banner</span>      Mostra el banner d'inici<br>
+                        <span class="cmd-skills">skills</span>      Mostra les meves habilitats tècniques<br>
+                        <span class="cmd-education">education</span>  Mostra la meva formació acadèmica<br>
+                        <span class="cmd-clear">clear</span>       Neteja la terminal<br>
+                        <span class="cmd-theme">theme</span>       Canvia el tema (fosc/clar)<br>
+                        <span class="cmd-lang">lang</span>         Canvia l'idioma (ca/en)
+                    `,
+                    class: 'cmd-help',
+                    outputClass: 'output-help'
+                },
+                about: {
+                    content: `
+                        <strong>Oriol Bisquert i Lopez</strong><br>
+                        Estudiant d'Enginyeria en Sistemes Audiovisuals<br>
+                        Especialitat: Processament digital de senyals<br><br>
+                        
+                        <strong>Passions:</strong><br>
+                        - Programació (Python, C++)<br>
+                        - Edició de vídeo i fotografia<br>
+                        - Tecnologies multimèdia<br>
+                        - Intel·ligència Artificial aplicada a l'àudio i vídeo
+                    `,
+                    class: 'cmd-about',
+                    outputClass: 'output-about'
+                },
+                projects: {
+                    content: `
+                        <strong>Projectes destacats:</strong><br>
+                        <span class="highlight">■ Editor de vídeo amb IA</span> (Python/OpenCV)<br>
+                        <span class="highlight">■ Motor de streaming personalitzat</span> (Go/FFmpeg)<br>
+                        <span class="highlight">■ Sistema IoT per hackathons</span> (C++)<br>
+                        <span class="highlight">■ Aplicació de gestió audiovisual</span> (JavaScript/React)<br>
+                        <span class="highlight">■ Plugin de processament d'àudio</span> (C++/JUCE)
+                    `,
+                    class: 'cmd-projects',
+                    outputClass: 'output-projects'
+                },
+                contact: {
+                    content: `
+                        <strong>Contacte:</strong><br>
+                        ✉️ <a href="mailto:oriol@example.com" target="_blank">oriol@example.com</a><br>
+                        🔗 <a href="https://linkedin.com/in/oriolbisquert" target="_blank">LinkedIn</a><br>
+                        🐙 <a href="https://github.com/oriolbis" target="_blank">GitHub</a><br>
+                        📱 +34 666 555 444
+                    `,
+                    class: 'cmd-contact',
+                    outputClass: 'output-contact'
+                },
+                skills: {
+                    content: `
+                        <strong>Habilitats tècniques:</strong><br>
+                        <strong>Llenguatges de programació:</strong> Python, C++, JavaScript, Go<br>
+                        <strong>Multimèdia:</strong> FFmpeg, OpenCV, WebRTC, GStreamer<br>
+                        <strong>IA/ML:</strong> TensorFlow, PyTorch, Processament de senyals<br>
+                        <strong>Web:</strong> React, Node.js, Web Audio API<br>
+                        <strong>Eines:</strong> Git, Docker, AWS, Adobe Premiere
+                    `,
+                    class: 'cmd-skills',
+                    outputClass: 'output-skills'
+                },
+                education: {
+                    content: `
+                        <strong>Formació acadèmica:</strong><br>
+                        <strong>Enginyeria en Sistemes Audiovisuals</strong><br>
+                        Universitat Politècnica de Catalunya (UPC)<br>
+                        2019 - Present<br><br>
+                        
+                        <strong>Batxillerat Tecnològic</strong><br>
+                        Institut Jaume Balmes, Barcelona<br>
+                        2017 - 2019
+                    `,
+                    class: 'cmd-education',
+                    outputClass: 'output-education'
+                },
+                banner: {
+                    content: `
+                        <div class="banner-container">
+                            <pre style="color: #00BCD4">
+██████╗  ██████╗ ██████╗ ████████╗  █████╗ ███████╗ ██████╗ ██╗     
+██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔════╝██╔═══██╗██║     
+██████╔╝██║   ██║██████╔╝   ██║   ███████║█████╗  ██║   ██║██║     
+██╔═══╝ ██║   ██║██╔══██╗   ██║   ██╔══██║██╔══╝  ██║   ██║██║     
+██║     ╚██████╔╝██║  ██║   ██║   ██║  ██║██║     ╚██████╔╝███████╗
+╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝
+                            </pre>
+                            <p>${translations[currentLang].welcome} al meu portafoli terminal</p>
+                            <p>Escriu '<span style="color: #4CAF50">help</span>' per veure les comandes disponibles</p>
+                        </div>
+                    `,
+                    class: 'cmd-banner',
+                    outputClass: 'output-banner'
+                },
+                clear: {
+                    content: '',
+                    class: 'cmd-clear',
+                    outputClass: '',
+                    action: () => {
+                        const initialHTML = initialContent.innerHTML;
+                        terminalOutput.innerHTML = '';
+                        terminalOutput.innerHTML = initialHTML;
+                    }
+                },
+                theme: {
+                    content: `
+                        <div>
+                            <strong>Temes disponibles:</strong><br>
+                            <button class="theme-btn" onclick="processCommand('theme dark')">Fosc</button>
+                            <button class="theme-btn" onclick="processCommand('theme light')">Clar</button>
+                        </div>
+                    `,
+                    class: 'cmd-help',
+                    outputClass: 'output-help'
+                },
+                lang: {
+                    content: `
+                        <div>
+                            <strong>Idiomes disponibles:</strong><br>
+                            <button class="theme-btn" onclick="processCommand('lang ca')">Català</button>
+                            <button class="theme-btn" onclick="processCommand('lang en')">English</button>
+                        </div>
+                    `,
+                    class: 'cmd-help',
+                    outputClass: 'output-help'
+                },
+                secret: {
+                    content: `
+                        <div style="color:#ff00ff">
+                            <pre>
+   _____ _                 _     __   __
+  / ____| |               | |    \ \ / /
+ | (___ | |_ __ _ _ __ ___| |__   \ V / 
+  \___ \| __/ _\` | '__/ __| '_ \   > <  
+  ____) | || (_| | | | (__| | | | / . \ 
+ |_____/ \__\__,_|_|  \___|_| |_|/_/ \_\
+                            </pre>
+                            <p>🚀 Has descobert un comando secret!</p>
+                        </div>
+                    `,
+                    class: 'cmd-secret',
+                    outputClass: 'output-help',
+                    hidden: true
+                }
+            };
+
+            function addCommandLine(command) {
+                const line = document.createElement('div');
+                line.className = 'prompt-line';
+                
+                let commandClass = 'command';
+                if (commands[command.split(' ')[0]]) {
+                    commandClass += ' ' + commands[command.split(' ')[0]].class;
+                }
+                
+                line.innerHTML = `<span class="prompt">oriolbisquert@portfolio:~$</span> <span class="${commandClass}">${command}</span>`;
+                terminalOutput.appendChild(line);
+                return line;
+            }
+
+            function typewriter(text, element, speed = 20) {
+                let i = 0;
+                element.innerHTML = '';
+                function type() {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    }
+                }
+                type();
+            }
+
+            function addOutput(content, command) {
+                const output = document.createElement('div');
+                if (commands[command] && commands[command].outputClass) {
+                    output.className = commands[command].outputClass;
+                }
+                
+                // Si el contingut és molt llarg, mostrar-lo directament
+                if (content.length > 300) {
+                    output.innerHTML = content;
+                } else {
+                    typewriter(content, output);
+                }
+                
+                terminalOutput.appendChild(output);
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            }
+
+            function showLoading() {
+                const loading = document.createElement('div');
+                loading.className = 'output-help';
+                loading.innerHTML = '<span class="loading">Processant</span>';
+                terminalOutput.appendChild(loading);
+                return loading;
+            }
+
+            function processCommand(fullCommand) {
+                if (fullCommand === '') return;
+                
+                const [command, ...args] = fullCommand.trim().split(' ');
+                const arg = args.join(' ');
+                
+                addCommandLine(fullCommand);
+                
+                // Comandos especials amb acció
+                if (command === 'clear') {
+                    commands.clear.action();
+                    return;
+                }
+                else if (command === 'theme') {
+                    if (arg === 'light') {
+                        document.body.classList.add('light-mode');
+                    } else if (arg === 'dark') {
+                        document.body.classList.remove('light-mode');
+                    }
+                    addOutput(`Tema canviat a: ${arg}`, 'help');
+                    return;
+                }
+                else if (command === 'lang') {
+                    if (arg === 'ca' || arg === 'en') {
+                        currentLang = arg;
+                        addOutput(`Idioma canviat a: ${arg.toUpperCase()}`, 'help');
+                    }
+                    return;
+                }
+                else if (command === 'search' && arg) {
+                    const loader = showLoading();
+                    setTimeout(() => {
+                        terminalOutput.removeChild(loader);
+                        addOutput(`🔍 Resultats per: ${arg}`, 'projects');
+                    }, 1000);
+                    return;
+                }
+                else if (command === 'màgic') {
+                    processCommand('secret');
+                    return;
+                }
+                
+                // Comandos normals
+                if (commands[command]) {
+                    if (commands[command].action) {
+                        commands[command].action();
+                    } else {
+                        addOutput(commands[command].content, command);
+                    }
+                } else {
+                    // Autocompletat parcial
+                    const matches = Object.keys(commands).filter(cmd => 
+                        cmd.startsWith(command) && !commands[cmd].hidden
+                    );
+                    
+                    if (matches.length > 0) {
+                        addOutput(`Comanda no reconeguda. Volies dir: ${matches.join(', ')}`, 'error');
+                    } else {
+                        addOutput(`Comanda no reconeguda: ${command}. Escriu '<span class="cmd-help">help</span>' per veure opcions.`, 'error');
+                    }
+                }
+            }
+
+            commandInput.addEventListener('keydown', function(e) {
+                // Històric amb fletxes
+                if (e.key === 'ArrowUp' && commandHistory.length > 0) {
+                    e.preventDefault();
+                    historyIndex = Math.min(historyIndex + 1, commandHistory.length - 1);
+                    commandInput.value = commandHistory[commandHistory.length - 1 - historyIndex];
+                } 
+                else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    historyIndex = Math.max(historyIndex - 1, -1);
+                    commandInput.value = historyIndex === -1 ? '' : commandHistory[commandHistory.length - 1 - historyIndex];
+                }
+                // Autocompletat amb Tab
+                else if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const input = commandInput.value.trim();
+                    const matches = Object.keys(commands).filter(cmd => 
+                        cmd.startsWith(input) && !commands[cmd].hidden
+                    );
+                    
+                    if (matches.length === 1) {
+                        commandInput.value = matches[0] + ' ';
+                    } else if (matches.length > 1) {
+                        addOutput(`Possibles comandes: ${matches.join(', ')}`, 'help');
+                    }
+                }
+                // Executar comando
+                else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const command = commandInput.value.trim();
+                    if (command) {
+                        commandHistory.push(command);
+                        historyIndex = -1;
+                        commandInput.value = '';
+                        processCommand(command);
+                    }
+                }
+            });
+
+            // Focus automàtic
+            commandInput.focus();
+            
+            // Delegació d'esdeveniments
+            document.addEventListener('click', function() {
+                commandInput.focus();
+            });
+
+            // Botons de la terminal
+            document.querySelector('.button-red').addEventListener('click', function() {
+                if (confirm(translations[currentLang].clearConfirm)) {
+                    window.close();
+                }
+            });
+
+            document.querySelector('.button-yellow').addEventListener('click', function() {
+                terminalOutput.innerHTML = '';
+                const message = document.createElement('div');
+                message.className = 'highlight';
+                message.textContent = 'Terminal minimitzada. Feu clic a qualsevol lloc per continuar.';
+                terminalOutput.appendChild(message);
+            });
+
+            document.querySelector('.button-green').addEventListener('click', function() {
+                terminalOutput.innerHTML = '';
+                addCommandLine('banner');
+                addOutput(commands.banner.content, 'banner');
+            });
         });
     </script>
 </body>
