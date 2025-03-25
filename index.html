@@ -20,6 +20,42 @@
             color: #333;
         }
         
+        body.light-mode .terminal-header {
+            background-color: #e0e0e0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        body.light-mode .terminal-container {
+            border: 1px solid #ccc;
+        }
+
+        body.light-mode .command {
+            color: #333;
+        }
+
+        body.light-mode .prompt {
+            color: #2e7d32;
+        }
+
+        body.light-mode #command-input {
+            color: #333;
+            caret-color: #2e7d32;
+        }
+
+        body.light-mode .cursor {
+            background: #2e7d32;
+        }
+
+        /* Colors comandos en light mode */
+        body.light-mode .cmd-help { color: #2e7d32; }
+        body.light-mode .cmd-about { color: #1565c0; }
+        body.light-mode .cmd-projects { color: #e65100; }
+        body.light-mode .cmd-contact { color: #6a1b9a; }
+        body.light-mode .cmd-clear { color: #c62828; }
+        body.light-mode .cmd-banner { color: #00838f; }
+        body.light-mode .cmd-skills { color: #558b2f; }
+        body.light-mode .cmd-education { color: #f9a825; }
+        
         .terminal-container {
             max-width: 700px;
             margin: 0 auto;
@@ -221,6 +257,12 @@
             border: none;
             border-radius: 3px;
             cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        body.light-mode .theme-btn {
+            background-color: #2e7d32;
         }
     </style>
 </head>
@@ -406,12 +448,23 @@
                     content: `
                         <div>
                             <strong>Temes disponibles:</strong><br>
-                            <button class="theme-btn" onclick="processCommand('theme dark')">Fosc</button>
                             <button class="theme-btn" onclick="processCommand('theme light')">Clar</button>
+                            <button class="theme-btn" onclick="processCommand('theme dark')">Fosc</button>
                         </div>
                     `,
                     class: 'cmd-help',
-                    outputClass: 'output-help'
+                    outputClass: 'output-help',
+                    action: (arg) => {
+                        if (arg === 'light') {
+                            document.body.classList.add('light-mode');
+                            return `Tema canviat a: clar`;
+                        } else if (arg === 'dark') {
+                            document.body.classList.remove('light-mode');
+                            return `Tema canviat a: fosc`;
+                        } else {
+                            return `Ús: theme [light|dark]`;
+                        }
+                    }
                 },
                 lang: {
                     content: `
@@ -477,7 +530,6 @@
                     output.className = commands[command].outputClass;
                 }
                 
-                // Si el contingut és molt llarg, mostrar-lo directament
                 if (content.length > 300) {
                     output.innerHTML = content;
                 } else {
@@ -500,22 +552,19 @@
                 if (fullCommand === '') return;
                 
                 const [command, ...args] = fullCommand.trim().split(' ');
-                const arg = args.join(' ');
+                const arg = args[0]; // Solo toma el primer argumento
                 
                 addCommandLine(fullCommand);
                 
-                // Comandos especials amb acció
                 if (command === 'clear') {
                     commands.clear.action();
                     return;
                 }
                 else if (command === 'theme') {
-                    if (arg === 'light') {
-                        document.body.classList.add('light-mode');
-                    } else if (arg === 'dark') {
-                        document.body.classList.remove('light-mode');
+                    if (commands.theme.action) {
+                        const result = commands.theme.action(arg);
+                        addOutput(result, 'theme');
                     }
-                    addOutput(`Tema canviat a: ${arg}`, 'help');
                     return;
                 }
                 else if (command === 'lang') {
@@ -538,15 +587,13 @@
                     return;
                 }
                 
-                // Comandos normals
                 if (commands[command]) {
                     if (commands[command].action) {
-                        commands[command].action();
+                        commands[command].action(arg);
                     } else {
                         addOutput(commands[command].content, command);
                     }
                 } else {
-                    // Autocompletat parcial
                     const matches = Object.keys(commands).filter(cmd => 
                         cmd.startsWith(command) && !commands[cmd].hidden
                     );
@@ -559,8 +606,10 @@
                 }
             }
 
+            // Hacer la función processCommand accesible globalmente para los botones
+            window.processCommand = processCommand;
+
             commandInput.addEventListener('keydown', function(e) {
-                // Històric amb fletxes
                 if (e.key === 'ArrowUp' && commandHistory.length > 0) {
                     e.preventDefault();
                     historyIndex = Math.min(historyIndex + 1, commandHistory.length - 1);
@@ -571,7 +620,6 @@
                     historyIndex = Math.max(historyIndex - 1, -1);
                     commandInput.value = historyIndex === -1 ? '' : commandHistory[commandHistory.length - 1 - historyIndex];
                 }
-                // Autocompletat amb Tab
                 else if (e.key === 'Tab') {
                     e.preventDefault();
                     const input = commandInput.value.trim();
@@ -585,7 +633,6 @@
                         addOutput(`Possibles comandes: ${matches.join(', ')}`, 'help');
                     }
                 }
-                // Executar comando
                 else if (e.key === 'Enter') {
                     e.preventDefault();
                     const command = commandInput.value.trim();
@@ -598,15 +645,12 @@
                 }
             });
 
-            // Focus automàtic
             commandInput.focus();
             
-            // Delegació d'esdeveniments
             document.addEventListener('click', function() {
                 commandInput.focus();
             });
 
-            // Botons de la terminal
             document.querySelector('.button-red').addEventListener('click', function() {
                 if (confirm(translations[currentLang].clearConfirm)) {
                     window.close();
