@@ -253,8 +253,8 @@
 ██║     ╚██████╔╝██║  ██║   ██║   ██║  ██║██║     ╚██████╔╝███████╗
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝
                             </pre>
-                            <p>Benvingut al meu portafoli terminal</p>
-                            <p>Escriu '<span style="color: #4CAF50">help</span>' per veure les comandes disponibles</p>
+                            <p id="welcome-message">Benvingut al meu portafoli terminal</p>
+                            <p id="help-message">Escriu '<span style="color: #4CAF50">help</span>' per veure les comandes disponibles</p>
                         </div>
                     </div>
                 </div>
@@ -273,6 +273,8 @@
             const terminalOutput = document.getElementById('terminal-output');
             const commandInput = document.getElementById('command-input');
             const initialContent = document.getElementById('initial-content');
+            const welcomeMessage = document.getElementById('welcome-message');
+            const helpMessage = document.getElementById('help-message');
             
             // Històric de comandos
             let commandHistory = [];
@@ -281,37 +283,10 @@
             // Traduccions
             const translations = {
                 ca: {
-                    welcome: "Benvingut",
+                    welcome: "Benvingut al meu portafoli terminal",
                     commands: "Comandes disponibles",
-                    clearConfirm: "Vols tancar la terminal?"
-                },
-                en: {
-                    welcome: "Welcome",
-                    commands: "Available commands",
-                    clearConfirm: "Do you want to close the terminal?"
-                }
-            };
-            let currentLang = 'ca';
-            
-            const commands = {
-                help: {
-                    content: `
-                        <strong>${translations[currentLang].commands}:</strong><br>
-                        <span class="cmd-about">about</span>       Mostra informació sobre mi<br>
-                        <span class="cmd-projects">projects</span>    Mostra els meus projectes<br>
-                        <span class="cmd-contact">contact</span>     Mostra informació de contacte<br>
-                        <span class="cmd-banner">banner</span>      Mostra el banner d'inici<br>
-                        <span class="cmd-skills">skills</span>      Mostra les meves habilitats tècniques<br>
-                        <span class="cmd-education">education</span>  Mostra la meva formació acadèmica<br>
-                        <span class="cmd-clear">clear</span>       Neteja la terminal<br>
-                        <span class="cmd-theme">theme</span>       Canvia el tema (fosc/clar)<br>
-                        <span class="cmd-lang">lang</span>         Canvia l'idioma (ca/en)
-                    `,
-                    class: 'cmd-help',
-                    outputClass: 'output-help'
-                },
-                about: {
-                    content: `
+                    clearConfirm: "Vols tancar la terminal?",
+                    about: `
                         <strong>Oriol Bisquert i Lopez</strong><br>
                         Estudiant d'Enginyeria en Sistemes Audiovisuals<br>
                         Especialitat: Processament digital de senyals<br><br>
@@ -322,11 +297,7 @@
                         - Tecnologies multimèdia<br>
                         - Intel·ligència Artificial aplicada a l'àudio i vídeo
                     `,
-                    class: 'cmd-about',
-                    outputClass: 'output-about'
-                },
-                projects: {
-                    content: `
+                    projects: `
                         <strong>Projectes destacats:</strong><br>
                         <span class="highlight">■ Editor de vídeo amb IA</span> (Python/OpenCV)<br>
                         <span class="highlight">■ Motor de streaming personalitzat</span> (Go/FFmpeg)<br>
@@ -334,22 +305,14 @@
                         <span class="highlight">■ Aplicació de gestió audiovisual</span> (JavaScript/React)<br>
                         <span class="highlight">■ Plugin de processament d'àudio</span> (C++/JUCE)
                     `,
-                    class: 'cmd-projects',
-                    outputClass: 'output-projects'
-                },
-                contact: {
-                    content: `
+                    contact: `
                         <strong>Contacte:</strong><br>
                         ✉️ <a href="mailto:oriol@example.com" target="_blank">oriol@example.com</a><br>
                         🔗 <a href="https://linkedin.com/in/oriolbisquert" target="_blank">LinkedIn</a><br>
                         🐙 <a href="https://github.com/oriolbis" target="_blank">GitHub</a><br>
                         📱 +34 666 555 444
                     `,
-                    class: 'cmd-contact',
-                    outputClass: 'output-contact'
-                },
-                skills: {
-                    content: `
+                    skills: `
                         <strong>Habilitats tècniques:</strong><br>
                         <strong>Llenguatges de programació:</strong> Python, C++, JavaScript, Go<br>
                         <strong>Multimèdia:</strong> FFmpeg, OpenCV, WebRTC, GStreamer<br>
@@ -357,11 +320,7 @@
                         <strong>Web:</strong> React, Node.js, Web Audio API<br>
                         <strong>Eines:</strong> Git, Docker, AWS, Adobe Premiere
                     `,
-                    class: 'cmd-skills',
-                    outputClass: 'output-skills'
-                },
-                education: {
-                    content: `
+                    education: `
                         <strong>Formació acadèmica:</strong><br>
                         <strong>Enginyeria en Sistemes Audiovisuals</strong><br>
                         Universitat Politècnica de Catalunya (UPC)<br>
@@ -371,11 +330,135 @@
                         Institut Jaume Balmes, Barcelona<br>
                         2017 - 2019
                     `,
+                    help: `
+                        <strong>Comandes disponibles:</strong><br>
+                        <span class="cmd-about">about</span>       Mostra informació sobre mi<br>
+                        <span class="cmd-projects">projects</span>    Mostra els meus projectes<br>
+                        <span class="cmd-contact">contact</span>     Mostra informació de contacte<br>
+                        <span class="cmd-banner">banner</span>      Mostra el banner d'inici<br>
+                        <span class="cmd-skills">skills</span>      Mostra les meves habilitats tècniques<br>
+                        <span class="cmd-education">education</span>  Mostra la meva formació acadèmica<br>
+                        <span class="cmd-clear">clear</span>       Neteja la terminal<br>
+                        <span class="cmd-theme">theme</span>       Canvia el tema (fosc/clar)<br>
+                        <span class="cmd-lang">lang</span>         Canvia l'idioma (ca/en)
+                    `,
+                    langOptions: `
+                        <div>
+                            <strong>Idiomes disponibles:</strong><br>
+                            <button class="theme-btn" onclick="processCommand('lang ca')">Català</button>
+                            <button class="theme-btn" onclick="processCommand('lang en')">English</button>
+                        </div>
+                    `,
+                    commandNotFound: "Comanda no reconeguda: {command}. Escriu '<span class=\"cmd-help\">help</span>' per veure opcions",
+                    didYouMean: "Comanda no reconeguda. Volies dir: {matches}"
+                },
+                en: {
+                    welcome: "Welcome to my terminal portfolio",
+                    commands: "Available commands",
+                    clearConfirm: "Do you want to close the terminal?",
+                    about: `
+                        <strong>Oriol Bisquert i Lopez</strong><br>
+                        Audiovisual Systems Engineering Student<br>
+                        Specialization: Digital signal processing<br><br>
+                        
+                        <strong>Passions:</strong><br>
+                        - Programming (Python, C++)<br>
+                        - Video editing and photography<br>
+                        - Multimedia technologies<br>
+                        - Artificial Intelligence applied to audio and video
+                    `,
+                    projects: `
+                        <strong>Featured projects:</strong><br>
+                        <span class="highlight">■ AI Video Editor</span> (Python/OpenCV)<br>
+                        <span class="highlight">■ Custom Streaming Engine</span> (Go/FFmpeg)<br>
+                        <span class="highlight">■ IoT System for Hackathons</span> (C++)<br>
+                        <span class="highlight">■ Audiovisual Management App</span> (JavaScript/React)<br>
+                        <span class="highlight">■ Audio Processing Plugin</span> (C++/JUCE)
+                    `,
+                    contact: `
+                        <strong>Contact:</strong><br>
+                        ✉️ <a href="mailto:oriol@example.com" target="_blank">oriol@example.com</a><br>
+                        🔗 <a href="https://linkedin.com/in/oriolbisquert" target="_blank">LinkedIn</a><br>
+                        🐙 <a href="https://github.com/oriolbis" target="_blank">GitHub</a><br>
+                        📱 +34 666 555 444
+                    `,
+                    skills: `
+                        <strong>Technical skills:</strong><br>
+                        <strong>Programming languages:</strong> Python, C++, JavaScript, Go<br>
+                        <strong>Multimedia:</strong> FFmpeg, OpenCV, WebRTC, GStreamer<br>
+                        <strong>AI/ML:</strong> TensorFlow, PyTorch, Signal processing<br>
+                        <strong>Web:</strong> React, Node.js, Web Audio API<br>
+                        <strong>Tools:</strong> Git, Docker, AWS, Adobe Premiere
+                    `,
+                    education: `
+                        <strong>Education:</strong><br>
+                        <strong>Audiovisual Systems Engineering</strong><br>
+                        Universitat Politècnica de Catalunya (UPC)<br>
+                        2019 - Present<br><br>
+                        
+                        <strong>Technological Baccalaureate</strong><br>
+                        Institut Jaume Balmes, Barcelona<br>
+                        2017 - 2019
+                    `,
+                    help: `
+                        <strong>Available commands:</strong><br>
+                        <span class="cmd-about">about</span>       Show information about me<br>
+                        <span class="cmd-projects">projects</span>    Show my projects<br>
+                        <span class="cmd-contact">contact</span>     Show contact information<br>
+                        <span class="cmd-banner">banner</span>      Show the welcome banner<br>
+                        <span class="cmd-skills">skills</span>      Show my technical skills<br>
+                        <span class="cmd-education">education</span>  Show my academic education<br>
+                        <span class="cmd-clear">clear</span>       Clear the terminal<br>
+                        <span class="cmd-theme">theme</span>       Change theme (dark/light)<br>
+                        <span class="cmd-lang">lang</span>         Change language (ca/en)
+                    `,
+                    langOptions: `
+                        <div>
+                            <strong>Available languages:</strong><br>
+                            <button class="theme-btn" onclick="processCommand('lang ca')">Català</button>
+                            <button class="theme-btn" onclick="processCommand('lang en')">English</button>
+                        </div>
+                    `,
+                    commandNotFound: "Command not recognized: {command}. Type '<span class=\"cmd-help\">help</span>' for options",
+                    didYouMean: "Command not recognized. Did you mean: {matches}"
+                }
+            };
+            
+            let currentLang = 'ca';
+            
+            const commands = {
+                help: {
+                    getContent: () => translations[currentLang].help,
+                    class: 'cmd-help',
+                    outputClass: 'output-help'
+                },
+                about: {
+                    getContent: () => translations[currentLang].about,
+                    class: 'cmd-about',
+                    outputClass: 'output-about'
+                },
+                projects: {
+                    getContent: () => translations[currentLang].projects,
+                    class: 'cmd-projects',
+                    outputClass: 'output-projects'
+                },
+                contact: {
+                    getContent: () => translations[currentLang].contact,
+                    class: 'cmd-contact',
+                    outputClass: 'output-contact'
+                },
+                skills: {
+                    getContent: () => translations[currentLang].skills,
+                    class: 'cmd-skills',
+                    outputClass: 'output-skills'
+                },
+                education: {
+                    getContent: () => translations[currentLang].education,
                     class: 'cmd-education',
                     outputClass: 'output-education'
                 },
                 banner: {
-                    content: `
+                    getContent: () => `
                         <div class="banner-container">
                             <pre style="color: #00BCD4">
 ██████╗  ██████╗ ██████╗ ████████╗  █████╗ ███████╗ ██████╗ ██╗     
@@ -385,47 +468,50 @@
 ██║     ╚██████╔╝██║  ██║   ██║   ██║  ██║██║     ╚██████╔╝███████╗
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝
                             </pre>
-                            <p>${translations[currentLang].welcome} al meu portafoli terminal</p>
-                            <p>Escriu '<span style="color: #4CAF50">help</span>' per veure les comandes disponibles</p>
+                            <p>${translations[currentLang].welcome}</p>
+                            <p>Type '<span style="color: #4CAF50">help</span>' to see available commands</p>
                         </div>
                     `,
                     class: 'cmd-banner',
                     outputClass: 'output-banner'
                 },
                 clear: {
-                    content: '',
+                    getContent: () => '',
                     class: 'cmd-clear',
                     outputClass: '',
                     action: () => {
                         const initialHTML = initialContent.innerHTML;
                         terminalOutput.innerHTML = '';
-                        terminalOutput.innerHTML = initialHTML;
+                        terminalOutput.appendChild(initialContent);
                     }
                 },
                 theme: {
-                    content: `
+                    getContent: () => `
                         <div>
-                            <strong>Temes disponibles:</strong><br>
-                            <button class="theme-btn" onclick="processCommand('theme dark')">Fosc</button>
-                            <button class="theme-btn" onclick="processCommand('theme light')">Clar</button>
+                            <strong>${translations[currentLang].commands}:</strong><br>
+                            <button class="theme-btn" onclick="processCommand('theme dark')">Dark</button>
+                            <button class="theme-btn" onclick="processCommand('theme light')">Light</button>
                         </div>
                     `,
                     class: 'cmd-help',
                     outputClass: 'output-help'
                 },
                 lang: {
-                    content: `
-                        <div>
-                            <strong>Idiomes disponibles:</strong><br>
-                            <button class="theme-btn" onclick="processCommand('lang ca')">Català</button>
-                            <button class="theme-btn" onclick="processCommand('lang en')">English</button>
-                        </div>
-                    `,
+                    getContent: () => translations[currentLang].langOptions,
                     class: 'cmd-help',
-                    outputClass: 'output-help'
+                    outputClass: 'output-help',
+                    action: (arg) => {
+                        if (arg === 'ca' || arg === 'en') {
+                            currentLang = arg;
+                            welcomeMessage.textContent = translations[currentLang].welcome;
+                            helpMessage.innerHTML = `Type '<span style="color: #4CAF50">help</span>' to see available commands`;
+                            return translations[currentLang].langOptions;
+                        }
+                        return '';
+                    }
                 },
                 secret: {
-                    content: `
+                    getContent: () => `
                         <div style="color:#ff00ff">
                             <pre>
    _____ _                 _     __   __
@@ -435,7 +521,7 @@
   ____) | || (_| | | | (__| | | | / . \ 
  |_____/ \__\__,_|_|  \___|_| |_|/_/ \_\
                             </pre>
-                            <p>🚀 Has descobert un comando secret!</p>
+                            <p>🚀 ${currentLang === 'ca' ? "Has descobert un comando secret!" : "You've discovered a secret command!"}</p>
                         </div>
                     `,
                     class: 'cmd-secret',
@@ -449,8 +535,9 @@
                 line.className = 'prompt-line';
                 
                 let commandClass = 'command';
-                if (commands[command.split(' ')[0]]) {
-                    commandClass += ' ' + commands[command.split(' ')[0]].class;
+                const cmd = command.split(' ')[0];
+                if (commands[cmd]) {
+                    commandClass += ' ' + commands[cmd].class;
                 }
                 
                 line.innerHTML = `<span class="prompt">oriolbisquert@portfolio:~$</span> <span class="${commandClass}">${command}</span>`;
@@ -477,7 +564,6 @@
                     output.className = commands[command].outputClass;
                 }
                 
-                // Si el contingut és molt llarg, mostrar-lo directament
                 if (content.length > 300) {
                     output.innerHTML = content;
                 } else {
@@ -515,13 +601,17 @@
                     } else if (arg === 'dark') {
                         document.body.classList.remove('light-mode');
                     }
-                    addOutput(`Tema canviat a: ${arg}`, 'help');
+                    addOutput(`Theme changed to: ${arg}`, 'help');
                     return;
                 }
                 else if (command === 'lang') {
                     if (arg === 'ca' || arg === 'en') {
                         currentLang = arg;
-                        addOutput(`Idioma canviat a: ${arg.toUpperCase()}`, 'help');
+                        welcomeMessage.textContent = translations[currentLang].welcome;
+                        helpMessage.innerHTML = currentLang === 'ca' 
+                            ? `Escriu '<span style="color: #4CAF50">help</span>' per veure les comandes disponibles`
+                            : `Type '<span style="color: #4CAF50">help</span>' to see available commands`;
+                        addOutput(`Language changed to: ${arg.toUpperCase()}`, 'help');
                     }
                     return;
                 }
@@ -529,7 +619,7 @@
                     const loader = showLoading();
                     setTimeout(() => {
                         terminalOutput.removeChild(loader);
-                        addOutput(`🔍 Resultats per: ${arg}`, 'projects');
+                        addOutput(`🔍 ${currentLang === 'ca' ? 'Resultats per:' : 'Results for:'} ${arg}`, 'projects');
                     }, 1000);
                     return;
                 }
@@ -541,9 +631,12 @@
                 // Comandos normals
                 if (commands[command]) {
                     if (commands[command].action) {
-                        commands[command].action();
+                        const result = commands[command].action(arg);
+                        if (result) {
+                            addOutput(result, command);
+                        }
                     } else {
-                        addOutput(commands[command].content, command);
+                        addOutput(commands[command].getContent(), command);
                     }
                 } else {
                     // Autocompletat parcial
@@ -552,12 +645,15 @@
                     );
                     
                     if (matches.length > 0) {
-                        addOutput(`Comanda no reconeguda. Volies dir: ${matches.join(', ')}`, 'error');
+                        addOutput(translations[currentLang].didYouMean.replace('{matches}', matches.join(', ')), 'error');
                     } else {
-                        addOutput(`Comanda no reconeguda: ${command}. Escriu '<span class="cmd-help">help</span>' per veure opcions.`, 'error');
+                        addOutput(translations[currentLang].commandNotFound.replace('{command}', command), 'error');
                     }
                 }
             }
+
+            // Fem la funció processCommand accessible globalment per als botons
+            window.processCommand = processCommand;
 
             commandInput.addEventListener('keydown', function(e) {
                 // Històric amb fletxes
@@ -582,7 +678,7 @@
                     if (matches.length === 1) {
                         commandInput.value = matches[0] + ' ';
                     } else if (matches.length > 1) {
-                        addOutput(`Possibles comandes: ${matches.join(', ')}`, 'help');
+                        addOutput(`${translations[currentLang].didYouMean.replace('{matches}', matches.join(', '))}`, 'help');
                     }
                 }
                 // Executar comando
@@ -617,14 +713,16 @@
                 terminalOutput.innerHTML = '';
                 const message = document.createElement('div');
                 message.className = 'highlight';
-                message.textContent = 'Terminal minimitzada. Feu clic a qualsevol lloc per continuar.';
+                message.textContent = currentLang === 'ca' 
+                    ? 'Terminal minimitzada. Feu clic a qualsevol lloc per continuar.' 
+                    : 'Terminal minimized. Click anywhere to continue.';
                 terminalOutput.appendChild(message);
             });
 
             document.querySelector('.button-green').addEventListener('click', function() {
                 terminalOutput.innerHTML = '';
                 addCommandLine('banner');
-                addOutput(commands.banner.content, 'banner');
+                addOutput(commands.banner.getContent(), 'banner');
             });
         });
     </script>
