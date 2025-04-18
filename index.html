@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#121212">
-    <meta name="description" content="Portfolio terminal d'Oriol Bisquert - Enginyer de Sistemes Audiovisuals">
-    <meta name="keywords" content="portfolio, desenvolupador, multimedia, Python, C++, IA">
-    <!-- Protecció CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline' 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:;">
     <title>Terminal | Oriol Bisquert</title>
     <style>
         body {
@@ -116,9 +112,6 @@
         .cmd-skills { color: #8BC34A; }
         .cmd-education { color: #FFEB3B; }
         .cmd-secret { color: #ff00ff; }
-        .cmd-cv { color: #FF5722; }
-        .cmd-references { color: #607D8B; }
-        .cmd-certifications { color: #795548; }
         
         /* Colors pels resultats */
         .output-help { 
@@ -137,9 +130,6 @@
         .output-banner { color: #00BCD4; }
         .output-skills { color: #8BC34A; }
         .output-education { color: #FFEB3B; }
-        .output-cv { color: #FF5722; }
-        .output-references { color: #607D8B; }
-        .output-certifications { color: #795548; }
         
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -254,37 +244,6 @@
             font-size: 0.9em;
         }
         
-        /* Secure elements */
-        .secure-link {
-            color: #00ff00;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-        .secure-link:hover {
-            color: #ffeb3b;
-        }
-        
-        /* Floating CV button */
-        #cv-download {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 12px 20px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        #cv-download:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
-        
         /* Media Queries */
         @media (max-width: 768px) {
             body {
@@ -316,13 +275,6 @@
             #command-input {
                 width: 80%;
             }
-            
-            #cv-download {
-                padding: 10px 15px;
-                font-size: 0.8em;
-                bottom: 15px;
-                right: 15px;
-            }
         }
         
         @media (max-width: 480px) {
@@ -333,6 +285,20 @@
             .terminal-button {
                 min-width: 15px;
                 min-height: 15px;
+            }
+        }
+        
+        @media (max-width: 768px) and (orientation: landscape) {
+            .terminal-container {
+                max-height: 80vh;
+            }
+            
+            #terminal-output {
+                max-height: 60vh;
+            }
+            
+            pre {
+                font-size: 0.6em;
             }
         }
     </style>
@@ -380,19 +346,7 @@
         </div>
     </div>
 
-    <!-- Botó flotant per a CV (Millora empresarial) -->
-    <button id="cv-download" class="theme-btn">
-        📄 Descarrega el meu CV
-    </button>
-
     <script>
-        // Protecció contra clickjacking
-        if (self === top) {
-            document.documentElement.style.visibility = 'visible';
-        } else {
-            top.location = self.location;
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             const terminalOutput = document.getElementById('terminal-output');
             const commandInput = document.getElementById('command-input');
@@ -400,36 +354,7 @@
             const welcomeMessage = document.getElementById('welcome-message');
             const helpMessage = document.getElementById('help-message');
             const asciiBanner = document.getElementById('ascii-banner');
-            const cvDownloadBtn = document.getElementById('cv-download');
             
-            // Funció de sanitització (Protecció XSS)
-            function sanitize(input) {
-                const div = document.createElement('div');
-                div.textContent = input;
-                return div.innerHTML
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/'/g, "&apos;")
-                    .replace(/"/g, "&quot;");
-            }
-
-            // Funció per revelar contacte de forma segura (Protecció scraping)
-            function revealContact(type) {
-                const contacts = {
-                    email: btoa('oriol@realdomain.com').split('').reverse().join(''),
-                    phone: btoa('+34666555444').split('').map(c => String.fromCharCode(c.charCodeAt(0) + 1)).join('')
-                };
-                
-                let value;
-                if (type === 'email') {
-                    value = atob(contacts.email.split('').reverse().join(''));
-                } else {
-                    value = atob(contacts.phone.split('').map(c => String.fromCharCode(c.charCodeAt(0) - 1)).join(''));
-                }
-                
-                return `<span class="secure-link" onclick="navigator.clipboard.writeText('${value}')">[Mostrar ${type}]</span>`;
-            }
-
             // Actualitzar el banner segons la mida de pantalla
             function updateBanner() {
                 const isMobile = window.innerWidth < 768;
@@ -448,34 +373,24 @@
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝`;
             }
             
+            // Executar al carregar i al canviar mida
             updateBanner();
             window.addEventListener('resize', updateBanner);
             
             // Històric de comandos
             let commandHistory = [];
             let historyIndex = -1;
-            let lastCommandTime = 0;
-            const COMMAND_RATE_LIMIT = 500; // ms
             
-            // Traduccions amb millores empresarials
+            // Traduccions
             const translations = {
                 ca: {
                     welcome: "Benvingut al meu portafoli terminal",
                     commands: "Comandes disponibles",
                     clearConfirm: "Vols tancar la terminal?",
-                    downloadCV: "Descarrega el meu CV complet",
-                    invalidTheme: "Error: Tema no vàlid (opcions: dark/light)",
-                    tooFast: "Error: Espera 0.5s entre comandos",
                     about: `
                         <strong>Oriol Bisquert i Lopez</strong><br>
                         Estudiant d'Enginyeria en Sistemes Audiovisuals<br>
-                        Universitat Politècnica de Catalunya (UPC)<br>
                         Especialitat: Processament digital de senyals<br><br>
-                        
-                        <strong>Experiència professional:</strong><br>
-                        - <span class="highlight">TechSolutions</span> (2023-actualitat):<br>
-                          &nbsp;&nbsp;• Optimització sistemes streaming (reducció latency 40%)<br>
-                          &nbsp;&nbsp;• Integració APIs de pàgament amb Node.js<br><br>
                         
                         <strong>Passions:</strong><br>
                         - Programació (Python, C++)<br>
@@ -485,83 +400,45 @@
                     `,
                     projects: `
                         <strong>Projectes destacats:</strong><br>
-                        <span class="highlight">■ Editor de vídeo amb IA</span> (Python/OpenCV/TensorFlow)<br>
-                        &nbsp;&nbsp;• Classificació automàtica de preses amb CNN<br>
-                        &nbsp;&nbsp;• <a href="https://github.com/oriolbis-real/video-editor-ai" target="_blank" rel="noopener noreferrer nofollow">Codi disponible a GitHub</a><br><br>
-                        
+                        <span class="highlight">■ Editor de vídeo amb IA</span> (Python/OpenCV)<br>
                         <span class="highlight">■ Motor de streaming personalitzat</span> (Go/FFmpeg)<br>
-                        &nbsp;&nbsp;• Baixa latency (≤200ms) per a esports electrònics<br>
-                        &nbsp;&nbsp;• Implementat per a 3 empreses locals<br><br>
-                        
-                        <span class="highlight">■ Sistema IoT per hackathons</span> (C++/Raspberry Pi)<br>
-                        &nbsp;&nbsp;• Guardonat al HackUPC 2022<br><br>
-                        
+                        <span class="highlight">■ Sistema IoT per hackathons</span> (C++)<br>
                         <span class="highlight">■ Aplicació de gestió audiovisual</span> (JavaScript/React)<br>
-                        &nbsp;&nbsp;• Integració amb API d'Adobe Premiere<br><br>
-                        
-                        <span class="highlight">■ Plugin de processament d'àudio</span> (C++/JUCE)<br>
-                        &nbsp;&nbsp;• Efectes en temps real amb baixa latency
+                        <span class="highlight">■ Plugin de processament d'àudio</span> (C++/JUCE)
                     `,
                     contact: `
                         <strong>Contacte:</strong><br>
-                        ✉️ ${revealContact('email')}<br>
-                        🔗 <a href="https://linkedin.com/in/oriolbisquert-real" target="_blank" rel="noopener noreferrer nofollow">LinkedIn</a><br>
-                        🐙 <a href="https://github.com/oriolbis-real" target="_blank" rel="noopener noreferrer nofollow">GitHub</a><br>
-                        📱 ${revealContact('phone')}
+                        ✉️ <a href="mailto:oriol@example.com" target="_blank">oriol@example.com</a><br>
+                        🔗 <a href="https://linkedin.com/in/oriolbisquert" target="_blank">LinkedIn</a><br>
+                        🐙 <a href="https://github.com/oriolbis" target="_blank">GitHub</a><br>
+                        📱 +34 666 555 444
                     `,
                     skills: `
                         <strong>Habilitats tècniques:</strong><br>
-                        <strong>Llenguatges de programació:</strong> Python (expert), C++ (avançat), JavaScript, Go<br>
-                        <strong>Multimèdia:</strong> FFmpeg, OpenCV, WebRTC, GStreamer, Nvidia Video Codec SDK<br>
-                        <strong>IA/ML:</strong> TensorFlow (certificat), PyTorch, Processament de senyals<br>
-                        <strong>Web:</strong> React, Node.js, Web Audio API, Three.js<br>
-                        <strong>Eines:</strong> Git, Docker, AWS (certificat), Adobe Premiere (certificat)
+                        <strong>Llenguatges de programació:</strong> Python, C++, JavaScript, Go<br>
+                        <strong>Multimèdia:</strong> FFmpeg, OpenCV, WebRTC, GStreamer<br>
+                        <strong>IA/ML:</strong> TensorFlow, PyTorch, Processament de senyals<br>
+                        <strong>Web:</strong> React, Node.js, Web Audio API<br>
+                        <strong>Eines:</strong> Git, Docker, AWS, Adobe Premiere
                     `,
                     education: `
                         <strong>Formació acadèmica:</strong><br>
                         <strong>Enginyeria en Sistemes Audiovisuals</strong><br>
                         Universitat Politècnica de Catalunya (UPC)<br>
-                        2019 - Present<br>
-                        &nbsp;&nbsp;• Especialització en Processament Digital de Senyals<br>
-                        &nbsp;&nbsp;• MITx: MicroMasters in Statistics and Data Science (en curs)<br><br>
+                        2019 - Present<br><br>
                         
                         <strong>Batxillerat Tecnològic</strong><br>
-                        <a href="https://virolai.com/oferta-educativa/batxillerat/" target="_blank" rel="noopener noreferrer nofollow">Escola Virolai</a>, Barcelona<br>
-                        2021 - 2023<br>
-                        &nbsp;&nbsp;• Premi extraordinari en Tecnologia Industrial
-                    `,
-                    references: `
-                        <strong>Referències:</strong><br>
-                        <strong>Joan Martínez</strong> (CTO a TechSolutions)<br>
-                        <em>"Oriol va optimitzar el nostre sistema de streaming amb un 40% menys de latency"</em><br>
-                        ✉️ <span class="secure-link" onclick="navigator.clipboard.writeText('joan.martinez@techsolutions.com')">[Copiar email]</span><br><br>
-                        
-                        <strong>Maria García</strong> (Professora UPC)<br>
-                        <em>"Excel·lent en processament digital de senyals i visió per computador"</em><br>
-                        ✉️ <span class="secure-link" onclick="navigator.clipboard.writeText('maria.garcia@upc.edu')">[Copiar email]</span>
-                    `,
-                    certifications: `
-                        <strong>Certificacions:</strong><br>
-                        🏅 <strong>TensorFlow Developer Certified</strong> (2023)<br>
-                        &nbsp;&nbsp;• ID: TF-123-456789<br><br>
-                        
-                        🏅 <strong>AWS Certified Cloud Practitioner</strong> (2022)<br>
-                        &nbsp;&nbsp;• ID: AWS-987-654321<br><br>
-                        
-                        🏅 <strong>Adobe Premiere Pro Certified</strong> (2021)<br>
-                        &nbsp;&nbsp;• ID: ADB-456-123789
+                        <a href="https://virolai.com/oferta-educativa/batxillerat/" target="_blank">Escola Virolai</a>, Barcelona<br>
+                        2021 - 2023
                     `,
                     help: `
                         <strong>Comandes disponibles:</strong><br>
                         <span class="cmd-about">about</span>       Mostra informació sobre mi<br>
                         <span class="cmd-projects">projects</span>    Mostra els meus projectes<br>
                         <span class="cmd-contact">contact</span>     Mostra informació de contacte<br>
+                        <span class="cmd-banner">banner</span>      Mostra el banner d'inici<br>
                         <span class="cmd-skills">skills</span>      Mostra les meves habilitats tècniques<br>
                         <span class="cmd-education">education</span>  Mostra la meva formació acadèmica<br>
-                        <span class="cmd-references">references</span> Mostra referències professionals<br>
-                        <span class="cmd-certifications">certifications</span> Mostra certificacions<br>
-                        <span class="cmd-cv">cv</span>           Descarrega el meu CV complet<br>
-                        <span class="cmd-banner">banner</span>      Mostra el banner d'inici<br>
                         <span class="cmd-clear">clear</span>       Neteja la terminal<br>
                         <span class="cmd-theme">theme</span>       Canvia el tema (fosc/clar)<br>
                         <span class="cmd-lang">lang</span>         Canvia l'idioma (ca/en)
@@ -577,7 +454,73 @@
                     didYouMean: "Comanda no reconeguda. Volies dir: {matches}"
                 },
                 en: {
-                    // [Similar translations in English...]
+                    welcome: "Welcome to my terminal portfolio",
+                    commands: "Available commands",
+                    clearConfirm: "Do you want to close the terminal?",
+                    about: `
+                        <strong>Oriol Bisquert i Lopez</strong><br>
+                        Audiovisual Systems Engineering Student<br>
+                        Specialization: Digital signal processing<br><br>
+                        
+                        <strong>Passions:</strong><br>
+                        - Programming (Python, C++)<br>
+                        - Video editing and photography<br>
+                        - Multimedia technologies<br>
+                        - Artificial Intelligence applied to audio and video
+                    `,
+                    projects: `
+                        <strong>Featured projects:</strong><br>
+                        <span class="highlight">■ AI Video Editor</span> (Python/OpenCV)<br>
+                        <span class="highlight">■ Custom Streaming Engine</span> (Go/FFmpeg)<br>
+                        <span class="highlight">■ IoT System for Hackathons</span> (C++)<br>
+                        <span class="highlight">■ Audiovisual Management App</span> (JavaScript/React)<br>
+                        <span class="highlight">■ Audio Processing Plugin</span> (C++/JUCE)
+                    `,
+                    contact: `
+                        <strong>Contact:</strong><br>
+                        ✉️ <a href="mailto:oriol@example.com" target="_blank">oriol@example.com</a><br>
+                        🔗 <a href="https://linkedin.com/in/oriolbisquert" target="_blank">LinkedIn</a><br>
+                        🐙 <a href="https://github.com/oriolbis" target="_blank">GitHub</a><br>
+                        📱 +34 666 555 444
+                    `,
+                    skills: `
+                        <strong>Technical skills:</strong><br>
+                        <strong>Programming languages:</strong> Python, C++, JavaScript, Go<br>
+                        <strong>Multimedia:</strong> FFmpeg, OpenCV, WebRTC, GStreamer<br>
+                        <strong>AI/ML:</strong> TensorFlow, PyTorch, Signal processing<br>
+                        <strong>Web:</strong> React, Node.js, Web Audio API<br>
+                        <strong>Tools:</strong> Git, Docker, AWS, Adobe Premiere
+                    `,
+                    education: `
+                        <strong>Education:</strong><br>
+                        <strong>Audiovisual Systems Engineering</strong><br>
+                        Universitat Politècnica de Catalunya (UPC)<br>
+                        2019 - Present<br><br>
+                        
+                        <strong>Technological Baccalaureate</strong><br>
+                        <a href="https://virolai.com/oferta-educativa/batxillerat/" target="_blank">Escola Virolai</a>, Barcelona<br>
+                        2021 - 2023
+                    `,
+                    help: `
+                        <strong>Available commands:</strong><br>
+                        <span class="cmd-about">about</span>       Show information about me<br>
+                        <span class="cmd-projects">projects</span>    Show my projects<br>
+                        <span class="cmd-contact">contact</span>     Show contact information<br>
+                        <span class="cmd-skills">skills</span>      Show my technical skills<br>
+                        <span class="cmd-education">education</span>  Show my academic education<br>
+                        <span class="cmd-clear">clear</span>       Clear the terminal<br>
+                        <span class="cmd-theme">theme</span>       Change theme (dark/light)<br>
+                        <span class="cmd-lang">lang</span>         Change language (ca/en)
+                    `,
+                    langOptions: `
+                        <div>
+                            <strong>Available languages:</strong><br>
+                            <button class="theme-btn" onclick="processCommand('lang ca')">Català</button>
+                            <button class="theme-btn" onclick="processCommand('lang en')">English</button>
+                        </div>
+                    `,
+                    commandNotFound: "Command not recognized: {command}. Type '<span class=\"cmd-help\">help</span>' for options",
+                    didYouMean: "Command not recognized. Did you mean: {matches}"
                 }
             };
             
@@ -614,24 +557,6 @@
                     class: 'cmd-education',
                     outputClass: 'output-education'
                 },
-                references: {
-                    getContent: () => translations[currentLang].references,
-                    class: 'cmd-references',
-                    outputClass: 'output-references'
-                },
-                certifications: {
-                    getContent: () => translations[currentLang].certifications,
-                    class: 'cmd-certifications',
-                    outputClass: 'output-certifications'
-                },
-                cv: {
-                    getContent: () => `
-                        <a href="/cv_oriol.pdf" download style="color:#00ff00">
-                        ⬇️ ${translations[currentLang].downloadCV}
-                        </a>`,
-                    class: 'cmd-cv',
-                    outputClass: 'output-cv'
-                },
                 banner: {
                     getContent: () => {
                         const isMobile = window.innerWidth < 768;
@@ -653,7 +578,7 @@ ${isMobile ? `
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝`}
                                 </pre>
                                 <p>${translations[currentLang].welcome}</p>
-                                <p>Type '<span style="color: #4CAF50">help</span>' to see available commands</p>
+                                <p>${translations[currentLang].helpMessage}</p>
                             </div>
                         `;
                     },
@@ -692,9 +617,6 @@ ${isMobile ? `
                             helpMessage.innerHTML = currentLang === 'ca' 
                                 ? `Escriu '<span style="color: #4CAF50">help</span>' per veure les comandes disponibles`
                                 : `Type '<span style="color: #4CAF50">help</span>' to see available commands`;
-                            cvDownloadBtn.textContent = currentLang === 'ca' 
-                                ? '📄 Descarrega el meu CV' 
-                                : '📄 Download my CV';
                             return translations[currentLang].langOptions;
                         }
                         return '';
@@ -720,33 +642,67 @@ ${isMobile ? `
                 }
             };
 
-            // [Rest of the original functions (addCommandLine, typewriter, addOutput, showLoading)...]
+            function addCommandLine(command) {
+                const line = document.createElement('div');
+                line.className = 'prompt-line';
+                
+                let commandClass = 'command';
+                const cmd = command.split(' ')[0];
+                if (commands[cmd]) {
+                    commandClass += ' ' + commands[cmd].class;
+                }
+                
+                line.innerHTML = `<span class="prompt">oriolbisquert@portfolio:~$</span> <span class="${commandClass}">${command}</span>`;
+                terminalOutput.appendChild(line);
+                return line;
+            }
+
+            function typewriter(text, element, speed = 20) {
+                let i = 0;
+                element.innerHTML = '';
+                function type() {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    }
+                }
+                type();
+            }
+
+            function addOutput(content, command) {
+                const output = document.createElement('div');
+                if (commands[command] && commands[command].outputClass) {
+                    output.className = commands[command].outputClass;
+                }
+                
+                if (content.length > 300) {
+                    output.innerHTML = content;
+                } else {
+                    typewriter(content, output);
+                }
+                
+                terminalOutput.appendChild(output);
+                terminalOutput.scrollTop = terminalOutput.scrollHeight;
+            }
+
+            function showLoading() {
+                const loading = document.createElement('div');
+                loading.className = 'output-help';
+                loading.innerHTML = '<span class="loading">Processant</span>';
+                terminalOutput.appendChild(loading);
+                return loading;
+            }
 
             function processCommand(fullCommand) {
-                const now = Date.now();
-                if (now - lastCommandTime < COMMAND_RATE_LIMIT) {
-                    addOutput(translations[currentLang].tooFast, 'error');
-                    return;
-                }
-                lastCommandTime = now;
-
-                const sanitizedCommand = sanitize(fullCommand);
-                const [command, ...args] = sanitizedCommand.trim().split(' ');
+                if (fullCommand === '') return;
+                
+                const [command, ...args] = fullCommand.trim().split(' ');
                 const arg = args.join(' ');
-
-                // Validació d'arguments (Protecció injecció)
-                if (command === 'theme' && !['dark', 'light'].includes(arg)) {
-                    addOutput(translations[currentLang].invalidTheme, 'error');
-                    return;
-                }
-
-                if (command === 'lang' && !['ca', 'en'].includes(arg)) {
-                    addOutput(translations[currentLang].invalidTheme.replace('theme', 'idioma'), 'error');
-                    return;
-                }
-
+                
                 addCommandLine(fullCommand);
                 
+                // Comandos especials amb acció
                 if (command === 'clear') {
                     commands.clear.action();
                     return;
@@ -761,12 +717,30 @@ ${isMobile ? `
                     return;
                 }
                 else if (command === 'lang') {
-                    if (commands.lang.action(arg)) {
+                    if (arg === 'ca' || arg === 'en') {
+                        currentLang = arg;
+                        welcomeMessage.textContent = translations[currentLang].welcome;
+                        helpMessage.innerHTML = currentLang === 'ca' 
+                            ? `Escriu '<span style="color: #4CAF50">help</span>' per veure les comandes disponibles`
+                            : `Type '<span style="color: #4CAF50">help</span>' to see available commands`;
                         addOutput(`Language changed to: ${arg.toUpperCase()}`, 'help');
                     }
                     return;
                 }
+                else if (command === 'search' && arg) {
+                    const loader = showLoading();
+                    setTimeout(() => {
+                        terminalOutput.removeChild(loader);
+                        addOutput(`🔍 ${currentLang === 'ca' ? 'Resultats per:' : 'Results for:'} ${arg}`, 'projects');
+                    }, 1000);
+                    return;
+                }
+                else if (command === 'màgic') {
+                    processCommand('secret');
+                    return;
+                }
                 
+                // Comandos normals
                 if (commands[command]) {
                     if (commands[command].action) {
                         const result = commands[command].action(arg);
@@ -777,6 +751,7 @@ ${isMobile ? `
                         addOutput(commands[command].getContent(), command);
                     }
                 } else {
+                    // Autocompletat parcial
                     const matches = Object.keys(commands).filter(cmd => 
                         cmd.startsWith(command) && !commands[cmd].hidden
                     );
@@ -789,14 +764,78 @@ ${isMobile ? `
                 }
             }
 
-            // [Rest of the original event listeners...]
+            // Fem la funció processCommand accessible globalment per als botons
+            window.processCommand = processCommand;
 
-            // Botó de descàrrega de CV
-            cvDownloadBtn.addEventListener('click', function() {
-                processCommand('cv');
+            commandInput.addEventListener('keydown', function(e) {
+                // Històric amb fletxes
+                if (e.key === 'ArrowUp' && commandHistory.length > 0) {
+                    e.preventDefault();
+                    historyIndex = Math.min(historyIndex + 1, commandHistory.length - 1);
+                    commandInput.value = commandHistory[commandHistory.length - 1 - historyIndex];
+                } 
+                else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    historyIndex = Math.max(historyIndex - 1, -1);
+                    commandInput.value = historyIndex === -1 ? '' : commandHistory[commandHistory.length - 1 - historyIndex];
+                }
+                // Autocompletat amb Tab
+                else if (e.key === 'Tab') {
+                    e.preventDefault();
+                    const input = commandInput.value.trim();
+                    const matches = Object.keys(commands).filter(cmd => 
+                        cmd.startsWith(input) && !commands[cmd].hidden
+                    );
+                    
+                    if (matches.length === 1) {
+                        commandInput.value = matches[0] + ' ';
+                    } else if (matches.length > 1) {
+                        addOutput(`${translations[currentLang].didYouMean.replace('{matches}', matches.join(', '))}`, 'help');
+                    }
+                }
+                // Executar comando
+                else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const command = commandInput.value.trim();
+                    if (command) {
+                        commandHistory.push(command);
+                        historyIndex = -1;
+                        commandInput.value = '';
+                        processCommand(command);
+                    }
+                }
             });
 
-            // [Rest of the initialization code...]
+            // Focus automàtic
+            commandInput.focus();
+            
+            // Delegació d'esdeveniments
+            document.addEventListener('click', function() {
+                commandInput.focus();
+            });
+
+            // Botons de la terminal
+            document.querySelector('.button-red').addEventListener('click', function() {
+                if (confirm(translations[currentLang].clearConfirm)) {
+                    window.close();
+                }
+            });
+
+            document.querySelector('.button-yellow').addEventListener('click', function() {
+                terminalOutput.innerHTML = '';
+                const message = document.createElement('div');
+                message.className = 'highlight';
+                message.textContent = currentLang === 'ca' 
+                    ? 'Terminal minimitzada. Feu clic a qualsevol lloc per continuar.' 
+                    : 'Terminal minimized. Click anywhere to continue.';
+                terminalOutput.appendChild(message);
+            });
+
+            document.querySelector('.button-green').addEventListener('click', function() {
+                terminalOutput.innerHTML = '';
+                addCommandLine('banner');
+                addOutput(commands.banner.getContent(), 'banner');
+            });
         });
     </script>
 </body>
